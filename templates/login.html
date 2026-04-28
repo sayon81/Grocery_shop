@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Grocery Store - Login{% endblock %}
+
+{% block extra_css %}
+<!-- Link login-specific CSS -->
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Animated Background Elements -->
+<div class="animated-bg">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+
+    <!-- Floating Grocery Icons -->
+    <div class="floating-icon" style="top: 15%; left: 8%; animation-delay: 0s">
+        🥬
+    </div>
+    <div class="floating-icon" style="top: 25%; right: 12%; animation-delay: 2s">
+        🍎
+    </div>
+    <div class="floating-icon" style="bottom: 20%; left: 15%; animation-delay: 4s">
+        🥕
+    </div>
+    <div class="floating-icon" style="top: 70%; right: 8%; animation-delay: 1.5s">
+        🥛
+    </div>
+    <div class="floating-icon" style="bottom: 30%; right: 20%; animation-delay: 3s">
+        🍞
+    </div>
+    <div class="floating-icon" style="top: 60%; left: 5%; animation-delay: 5s">
+        🥚
+    </div>
+
+    <!-- Decorative Shapes -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+</div>
+
+<section class="login-section">
+    <div class="login-container">
+        <!-- Login Box -->
+        <div class="login-box" id="loginBox">
+            <div class="login-header">
+                <div class="avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <h2>Welcome Back!</h2>
+                <p>Login to your account</p>
+            </div>
+
+            <form method="post" class="register-form" id="login-form" action="{% url 'home:login' %}">
+                {% csrf_token %}
+                <div id="messageContainer">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                {% if form.errors %}
+                <div class="error-message">
+                    <p>Your email and password didn't match. Please try again.</p>
+                </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        Email / Username
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username"
+                        class="form-input" 
+                        placeholder="Enter your email or username"
+                        value="{{ form.username.value|default:'' }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        Password
+                    </label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password"
+                            class="form-input" 
+                            placeholder="Enter your password"
+                            required
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span class="checkmark"></span>
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-password" onclick="alert('Password reset feature coming soon!'); return false;">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-login">
+                    <span class="btn-text">Login</span>
+                    <span class="btn-loader"></span>
+                </button>
+            </form>
+
+            <div class="signup-link">
+                Don't have an account? <a href="{% url 'home:signup' %}">Sign up</a>
+            </div>
+        </div>
+
+        <!-- Success Message (Hidden by default) -->
+        <div class="success-message" id="successMessage" style="display: none;">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h3>Login Successful!</h3>
+            <p>Welcome back! Redirecting to home page...</p>
+        </div>
+    </div>
+</section>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+    <div class="toast-icon"></div>
+    <div class="toast-message"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function togglePassword() {
+    const passwordField = document.getElementById("password");
+    const eyeIcon = document.getElementById("eyeIcon");
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.innerHTML = `
+            <path d="M1 1L23 23"></path>
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+        `;
+    } else {
+        passwordField.type = "password";
+        eyeIcon.innerHTML = `
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        `;
+    }
+}
+
+// Handle login form submission
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    // Don't prevent default - let Django handle the form submission
+    // Just show loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.classList.add('loading');
+    
+    // The form will submit normally to Django
+    return true;
+});
+
+// Show toast notification
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMessage = toast.querySelector('.toast-message');
+    toastMessage.textContent = message;
+    
+    if (type === 'error') {
+        toast.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
+    } else {
+        toast.style.background = 'linear-gradient(135deg, #28a745 0%, #218838 100%)';
+    }
+    
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// Check if user is already logged in (optional)
+document.addEventListener('DOMContentLoaded', function() {
+    // Add input focus effects
+    const formInputs = document.querySelectorAll('.form-input');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+    });
+});
+
+// Show toast if there are messages
+{% if messages %}
+    {% for message in messages %}
+        showToast("{{ message }}", "{{ message.tags }}");
+    {% endfor %}
+{% endif %}
+</script>
+{% endblock %}

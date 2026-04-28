@@ -1,0 +1,540 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name|default:'Product Details' }} - Grocery Store{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-detail-section {
+        padding: 60px 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    }
+    
+    .product-detail-container {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+    }
+    
+    .product-image-container {
+        flex: 1;
+        max-width: 500px;
+    }
+    
+    .product-main-image {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+    }
+    
+    .product-main-image:hover {
+        transform: scale(1.02);
+    }
+    
+    .product-info-container {
+        flex: 1;
+    }
+    
+    .product-title {
+        font-size: 2.5rem;
+        color: #2f3542;
+        margin-bottom: 15px;
+    }
+    
+    .product-category {
+        color: #28a745;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .product-category a {
+        color: #28a745;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .product-category a:hover {
+        color: #218838;
+        text-decoration: underline;
+    }
+    
+    .product-price {
+        font-size: 2.5rem;
+        color: #28a745;
+        font-weight: 700;
+        margin: 20px 0;
+    }
+    
+    .product-description {
+        font-size: 1.1rem;
+        color: #747d8c;
+        line-height: 1.8;
+        margin: 20px 0;
+    }
+    
+    .product-features {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+    }
+    
+    .product-features li {
+        padding: 10px 0;
+        color: #2f3542;
+        font-size: 1rem;
+    }
+    
+    .product-features li:before {
+        content: "✓";
+        color: #28a745;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+    
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 30px 0;
+    }
+    
+    .quantity-selector label {
+        font-weight: 600;
+        color: #2f3542;
+    }
+    
+    .quantity-input {
+        display: flex;
+        align-items: center;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .quantity-btn {
+        background: #f8f9fa;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: #2f3542;
+        transition: all 0.3s ease;
+    }
+    
+    .quantity-btn:hover {
+        background: #28a745;
+        color: white;
+    }
+    
+    .quantity-value {
+        width: 60px;
+        text-align: center;
+        border: none;
+        padding: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .btn-add-cart {
+        flex: 1;
+        padding: 15px 30px;
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-add-cart::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+    }
+    
+    .btn-add-cart:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .btn-add-cart:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(40, 167, 69, 0.5);
+    }
+    
+    .btn-add-cart:active {
+        transform: translateY(-1px);
+    }
+    
+    .btn-buy-now {
+        flex: 1;
+        padding: 15px 30px;
+        background: white;
+        color: #28a745;
+        border: 2px solid #28a745;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-buy-now::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(40, 167, 69, 0.1);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+    }
+    
+    .btn-buy-now:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .btn-buy-now:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-buy-now:active {
+        transform: translateY(-1px);
+    }
+    
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        z-index: 9999;
+    }
+    
+    .notification.show {
+        transform: translateX(0);
+    }
+    
+    .notification i {
+        margin-right: 10px;
+    }
+    
+    @media only screen and (max-width: 768px) {
+        .product-detail-container {
+            flex-direction: column;
+        }
+        
+        .product-image-container {
+            max-width: 100%;
+        }
+        
+        .product-main-image {
+            height: 300px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+        }
+        
+        .product-price {
+            font-size: 2rem;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .notification {
+            left: 20px;
+            right: 20px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Product Detail Section Starts Here -->
+<section class="product-detail-section">
+    <div class="container">
+        <div class="product-detail-container">
+            <div class="product-image-container">
+                <img id="productImage" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" 
+                     alt="{{ product.name|default:'Product' }}" class="product-main-image">
+            </div>
+            
+            <div class="product-info-container">
+                <h1 class="product-title" id="productName">{{ product.name|default:'Premium Rice' }}</h1>
+                <p class="product-category" id="productCategory">
+                    <a href="{% url 'home:category_items' product.category.slug|default:'grains' %}">
+                        {{ product.category.name|default:'Grains' }}
+                    </a>
+                </p>
+                <p class="product-price" id="productPrice">৳{{ product.price|default:'2.30' }}</p>
+                <p class="product-description" id="productDescription">
+                    {{ product.description|default:'High-quality long grain rice, perfect for daily cooking. This premium rice is carefully selected and processed to ensure the best quality and taste.' }}
+                </p>
+                
+                <ul class="product-features" id="productFeatures">
+                    {% if product.features %}
+                        {% for feature in product.features %}
+                            <li>{{ feature }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>Premium Quality</li>
+                        <li>Long Grain</li>
+                        <li>Fresh & Organic</li>
+                        <li>Best for Daily Cooking</li>
+                    {% endif %}
+                </ul>
+                
+                <form id="productForm" method="post" action="
+                    {% if product.id %}
+                        {% url 'home:add_to_cart' product.id %}
+                    {% else %}
+                        {% url 'home:add_to_cart' 0 %}?name={{ product.name|urlencode }}&price={{ product.price }}
+                    {% endif %}
+                ">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_name" id="hiddenProductName" value="{{ product.name|default:'Premium Rice' }}">
+                    <input type="hidden" name="product_image" id="hiddenProductImage" value="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}">
+                    <input type="hidden" name="product_price" id="hiddenProductPrice" value="{{ product.price|default:'2.30' }}">
+                    <input type="hidden" name="product_category" id="hiddenProductCategory" value="{{ product.category.name|default:'Grains' }}">
+                    
+                    <div class="quantity-selector">
+                        <label>Quantity:</label>
+                        <div class="quantity-input">
+                            <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="quantity" name="quantity" class="quantity-value" value="1" min="1" max="100" required>
+                            <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="action-buttons">
+                    <button class="btn-add-cart" onclick="addToCart()">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                    <!-- Replace the existing Buy Now button with this -->
+                    <a href="javascript:void(0);" onclick="buyNow()" class="btn-buy-now">
+                        <i class="fas fa-credit-card"></i> Buy Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Product Detail Section Ends Here -->
+
+<!-- Notification -->
+<div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="notificationMessage">Product added to cart!</span>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Get product details from URL parameters (for static links) or use Django context
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlProductName = urlParams.get('name');
+    const urlProductImage = urlParams.get('image');
+    const urlProductPrice = urlParams.get('price');
+    const urlProductCategory = urlParams.get('category');
+    const urlProductDescription = urlParams.get('description');
+
+    // Use URL parameters if available, otherwise use Django context
+    const productName = urlProductName ? decodeURIComponent(urlProductName) : '{{ product.name|default:'Premium Rice' }}';
+    const productImage = urlProductImage ? decodeURIComponent(urlProductImage) : '{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}';
+    const productPrice = urlProductPrice ? decodeURIComponent(urlProductPrice) : '{{ product.price|default:'2.30' }}';
+    const productCategory = urlProductCategory ? decodeURIComponent(urlProductCategory) : '{{ product.category.name|default:'Grains' }}';
+    const productDescription = urlProductDescription ? decodeURIComponent(urlProductDescription) : '{{ product.description|default:'High-quality long grain rice, perfect for daily cooking.' }}';
+
+    // Update page content
+    document.getElementById('productName').textContent = productName;
+    document.getElementById('productImage').src = productImage;
+    document.getElementById('productPrice').textContent = '৳' + productPrice.replace('৳', '');
+    document.getElementById('productCategory').innerHTML = `<a href="/category/${productCategory.toLowerCase()}/">${productCategory}</a>`;
+    document.getElementById('productDescription').textContent = productDescription;
+    
+    // Update hidden inputs
+    document.getElementById('hiddenProductName').value = productName;
+    document.getElementById('hiddenProductImage').value = productImage;
+    document.getElementById('hiddenProductPrice').value = productPrice.replace('৳', '');
+    document.getElementById('hiddenProductCategory').value = productCategory;
+
+    function increaseQuantity() {
+        const qtyInput = document.getElementById('quantity');
+        qtyInput.value = parseInt(qtyInput.value) + 1;
+    }
+
+    function decreaseQuantity() {
+        const qtyInput = document.getElementById('quantity');
+        if (parseInt(qtyInput.value) > 1) {
+            qtyInput.value = parseInt(qtyInput.value) - 1;
+        }
+    }
+
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        document.getElementById('notificationMessage').textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    function addToCart() {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    
+    // Get product details from the page
+    const productName = document.getElementById('productName').textContent;
+    const productPrice = document.getElementById('productPrice').textContent.replace('$', '').replace('₹', '').replace('৳', '');
+    const productImage = document.getElementById('productImage').src;
+    const productCategory = document.getElementById('productCategory').textContent.trim();
+    
+    // DEBUG: Print what we're sending
+    console.log("="*50);
+    console.log("ADD TO CART - Sending data:");
+    console.log("Product Name:", productName);
+    console.log("Product Price:", productPrice);
+    console.log("Product Image:", productImage);
+    console.log("Product Category:", productCategory);
+    console.log("Quantity:", quantity);
+    console.log("="*50);
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('product_name', productName);
+    formData.append('product_price', productPrice);
+    formData.append('product_image', productImage);
+    formData.append('product_category', productCategory);
+    formData.append('quantity', quantity);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    
+    // Determine the correct URL
+    {% if product.id %}
+        var url = "{% url 'home:add_to_cart' product.id %}";
+    {% else %}
+        var url = "{% url 'home:add_to_cart' 0 %}";
+    {% endif %}
+    
+    console.log("Sending to URL:", url);
+    
+    // Send to server via AJAX
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Server response:", data);
+        if (data.success) {
+            showNotification('Product added to cart!');
+        } else {
+            showNotification('Error adding product to cart: ' + (data.message || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error adding product to cart');
+    });
+    }
+
+    function buyNow() {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    
+    // Get product details
+    const productName = document.getElementById('productName').textContent;
+    const productPrice = document.getElementById('productPrice').textContent.replace('৳', '').replace('₹', '').replace('$', '').trim();
+    const productImage = document.getElementById('productImage').src;
+    const productCategory = document.getElementById('productCategory').textContent.trim();
+    
+    // Get unit - check if there's a unit display element
+    let unit = 'kg'; // default
+    const unitElement = document.querySelector('.item-unit');
+    if (unitElement) {
+        unit = unitElement.textContent.trim();
+    }
+    
+    // Debug
+    console.log("="*50);
+    console.log("BUY NOW - Sending data:");
+    console.log("Product Name:", productName);
+    console.log("Product Price:", productPrice);
+    console.log("Quantity:", quantity);
+    console.log("Unit:", unit);
+    console.log("Total (subtotal):", productPrice * quantity);
+    console.log("="*50);
+    
+    {% if user.is_authenticated %}
+        // User is logged in - go directly to payment with the selected quantity
+        window.location.href = "{% url 'home:payment' %}?name=" + encodeURIComponent(productName) + 
+                            "&price=" + encodeURIComponent(productPrice) +
+                            "&quantity=" + quantity +
+                            "&unit=" + encodeURIComponent(unit);
+    {% else %}
+        // Redirect to login if not authenticated
+        window.location.href = "{% url 'home:login' %}?next=" + encodeURIComponent(
+            "{% url 'home:payment' %}?name=" + encodeURIComponent(productName) + 
+            "&price=" + encodeURIComponent(productPrice) +
+            "&quantity=" + quantity +
+            "&unit=" + encodeURIComponent(unit)
+        );
+    {% endif %}
+    }
+
+    // Add to cart on Enter key in quantity input
+    document.getElementById('quantity').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addToCart();
+        }
+    });
+</script>
+{% endblock %}

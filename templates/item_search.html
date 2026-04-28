@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Grocery Store - Search Results{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-hero {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.92), rgba(32, 201, 151, 0.92));
+        padding: 52px 0;
+        text-align: center;
+    }
+
+    .search-hero h2 {
+        font-size: 2rem;
+        color: white;
+        margin: 0 0 6px;
+        font-weight: 700;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .search-hero .query-highlight {
+        color: #ffe066;
+        font-weight: 700;
+    }
+
+    .search-hero .results-count {
+        color: rgba(255,255,255,0.85);
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .search-hero .results-count strong {
+        color: white;
+    }
+
+    .results-section {
+        padding: 40px 0 60px;
+        background: #f7f8fa;
+        min-height: 400px;
+    }
+
+    .results-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .result-card {
+        background: white;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        animation: fadeUp 0.45s ease both;
+    }
+
+    .result-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 32px rgba(40,167,69,0.15);
+    }
+
+    .result-card-img {
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .result-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.45s ease;
+    }
+
+    .result-card:hover .result-card-img img {
+        transform: scale(1.08);
+    }
+
+    .result-card-body {
+        padding: 18px 20px 22px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .result-card-body h4 {
+        font-size: 1.15rem;
+        font-weight: 650;
+        color: #2d3436;
+        margin: 0 0 6px;
+    }
+
+    .result-card-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #28a745;
+        margin: 0 0 8px;
+    }
+
+    .result-card-desc {
+        font-size: 0.88rem;
+        color: #636e72;
+        line-height: 1.55;
+        margin: 0 0 16px;
+        flex: 1;
+    }
+
+    .result-card-btn {
+        display: inline-block;
+        padding: 10px 24px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        border-radius: 24px;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.25s ease;
+        align-self: flex-start;
+    }
+
+    .result-card-btn:hover {
+        background: linear-gradient(135deg, #218838, #1baa80);
+        box-shadow: 0 6px 18px rgba(40,167,69,0.3);
+        color: white;
+        transform: scale(1.04);
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 64px 24px;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(40,167,69,0.1), rgba(32,201,151,0.1));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+    }
+
+    .empty-icon i {
+        font-size: 2rem;
+        color: #28a745;
+        opacity: 0.7;
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin: 0 0 8px;
+    }
+
+    .empty-state .empty-msg {
+        font-size: 0.95rem;
+        color: #636e72;
+        line-height: 1.6;
+        margin: 0 0 10px;
+    }
+
+    .empty-state .empty-hint {
+        font-size: 0.88rem;
+        color: #a4b0be;
+        margin: 0 0 28px;
+    }
+
+    .empty-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .empty-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-radius: 28px;
+        text-decoration: none;
+        transition: all 0.25s ease;
+    }
+
+    .empty-btn-primary {
+        color: white;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        box-shadow: 0 4px 14px rgba(40,167,69,0.25);
+    }
+
+    .empty-btn-primary:hover {
+        background: linear-gradient(135deg, #218838, #1baa80);
+        box-shadow: 0 6px 22px rgba(40,167,69,0.35);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .empty-btn-outline {
+        color: #28a745;
+        background: white;
+        border: 2px solid #28a745;
+    }
+
+    .empty-btn-outline:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(40,167,69,0.25);
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 992px) {
+        .results-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+        .results-grid { grid-template-columns: 1fr; }
+        .search-hero h2 { font-size: 1.5rem; }
+        .empty-actions { flex-direction: column; align-items: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Search Hero -->
+<section class="search-hero">
+    <div class="container">
+        <h2>Search results for <span class="query-highlight">"{{ search_query }}"</span></h2>
+        <p class="results-count">Found <strong>{{ results_count }}</strong> item{{ results_count|pluralize }}</p>
+    </div>
+</section>
+
+<!-- Results -->
+<section class="results-section">
+    <div class="container">
+        {% if results %}
+            <div class="results-grid">
+                {% for item in results %}
+                <div class="result-card" style="animation-delay: {{ forloop.counter0|floatformat:0 }}00ms"
+                     onclick="viewProduct('{{ item.name|escapejs }}', '{% if item.image %}{{ item.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}', '{{ item.price }}', '{{ item.category.name|escapejs }}', '{{ item.description|escapejs }}')">
+                    <div class="result-card-img">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.jpg' %}" alt="{{ item.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="result-card-body">
+                        <h4>{{ item.name }}</h4>
+                        <p class="result-card-price">৳{{ item.price }}</p>
+                        <p class="result-card-desc">{{ item.description|truncatechars:100 }}</p>
+                        <a href="{% url 'home:order' %}?name={{ item.name|urlencode }}&image={% if item.image %}{{ item.image.url|urlencode }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}&price={{ item.price }}&category={{ item.category.name|urlencode }}&description={{ item.description|urlencode }}"
+                           class="result-card-btn"
+                           onclick="event.stopPropagation()">Order Now</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>No items found</h3>
+                <p class="empty-msg">We couldn't find anything matching "{{ search_query }}"</p>
+                <p class="empty-hint">Try a different keyword or browse our categories</p>
+                <div class="empty-actions">
+                    <a href="{% url 'home:categories' %}" class="empty-btn empty-btn-primary">
+                        <i class="fas fa-th-large"></i> Browse Categories
+                    </a>
+                    <a href="{% url 'home:items' %}" class="empty-btn empty-btn-outline">
+                        <i class="fas fa-shopping-basket"></i> View All Items
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function viewProduct(name, image, price, category, description) {
+        window.location.href = "{% url 'home:product_detail_query' %}?name=" + encodeURIComponent(name) +
+                              "&image=" + encodeURIComponent(image) +
+                              "&price=" + encodeURIComponent(price) +
+                              "&category=" + encodeURIComponent(category) +
+                              "&description=" + encodeURIComponent(description);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var searchTerm = "{{ search_query|escapejs }}".toLowerCase();
+        if (!searchTerm) return;
+
+        document.querySelectorAll('.result-card-body h4, .result-card-desc').forEach(function(el) {
+            var text = el.textContent;
+            if (text.toLowerCase().includes(searchTerm)) {
+                el.innerHTML = text.replace(
+                    new RegExp(searchTerm, 'gi'),
+                    function(match) { return '<mark style="background:#fff3cd;color:#856404;padding:1px 3px;border-radius:3px;">' + match + '</mark>'; }
+                );
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,1457 @@
+/* 
+    Author: Enhanced by AI;
+    Theme: Modern Grocery Store;
+    version: 2.0 - With Animations & Interactivity;
+*/
+
+/* CSS for All */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.container{
+    width: 85%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.img-responsive{
+    width: 100%;
+    transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+.img-curve{
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.text-right{
+    text-align: right;
+}
+.text-center{
+    text-align: center;
+}
+.text-left{
+    text-align: left;
+}
+.text-white{
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.clearfix{
+    clear: both;
+    float: none;
+}
+
+.navbar .clearfix {
+    display: none;
+}
+
+a{
+    color: #28a745;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+a:hover{
+    color: #218838;
+    transform: translateY(-2px);
+}
+
+.btn{
+    padding: 12px 30px;
+    border: none;
+    font-size: 1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.btn-primary{
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white !important;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    z-index: 1;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transition: width 0.4s ease;
+    z-index: -1;
+    border-radius: 50px;
+}
+
+.btn-primary:hover{
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.5);
+    color: white !important;
+}
+
+.btn-primary:hover::before {
+    width: 100%;
+}
+
+.btn-primary:active{
+    transform: translateY(-1px) scale(1.02);
+}
+
+h2{
+    color: #2f3542;
+    font-size: 2.5rem;
+    margin-bottom: 2.5rem;
+    font-weight: 700;
+    position: relative;
+    animation: fadeInDown 0.8s ease;
+}
+
+.text-center h2 {
+    display: inline-block;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    border-radius: 2px;
+}
+
+h3{
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.float-container{
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.float-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.8) 0%, rgba(33, 136, 56, 0.8) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+}
+
+.float-container:hover::before {
+    opacity: 1;
+}
+
+.float-text{
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    transition: all 0.4s ease;
+}
+
+.float-container:hover .float-text {
+    bottom: 40px;
+    transform: translateX(-50%) scale(1.1);
+}
+
+fieldset{
+    border: 2px solid rgba(40, 167, 69, 0.3);
+    margin: 2rem 0;
+    padding: 2rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.6s ease;
+}
+
+legend {
+    padding: 0 15px;
+    font-weight: 600;
+    color: #28a745;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* CSS for navbar section */
+.navbar {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    animation: slideInDown 0.6s ease;
+    padding: 5px 0;
+}
+
+.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo{
+    width: 10%;
+    min-width: 120px;
+    animation: slideInLeft 0.8s ease;
+}
+
+.logo img {
+    transition: transform 0.3s ease;
+    display: block;
+}
+
+.logo img:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.menu{
+    animation: slideInRight 0.8s ease;
+    position: relative;
+}
+
+.menu ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.menu ul li{
+    margin: 0 15px;
+    position: relative;
+}
+
+.menu ul li a {
+    display: inline-block;
+    padding: 8px 5px;
+    position: relative;
+    color: #2f3542;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.menu ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 5px;
+    right: 5px;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+.menu ul li a:hover::after {
+    width: calc(100% - 10px);
+}
+
+/* Hamburger Menu Icon */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 10px;
+    background: none;
+    border: none;
+    z-index: 1001;
+}
+
+.menu-toggle span {
+    width: 28px;
+    height: 3px;
+    background: #28a745;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+
+/* CSS for Food Search Section */
+.food-search{
+    background-image: linear-gradient(135deg, rgba(40, 167, 69, 0.8) 0%, rgba(33, 136, 56, 0.7) 100%), url(../images/bg.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 80px 0;
+    position: relative;
+    animation: fadeIn 0.8s ease;
+}
+
+.food-search::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.2);
+    z-index: 0;
+}
+
+.food-search .container {
+    position: relative;
+    z-index: 1;
+}
+
+.food-search h2 {
+    color: white;
+    animation: fadeInUp 1s ease;
+}
+
+.food-search input[type="search"]{
+    width: 55%;
+    padding: 18px 25px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 50px;
+    outline: none;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    animation: scaleIn 0.8s ease 0.3s both;
+}
+
+.food-search input[type="search"]:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    width: 60%;
+}
+
+.food-search .btn {
+    animation: scaleIn 0.8s ease 0.5s both;
+    margin-left: 10px;
+}
+
+
+/* CSS for Categories */
+.categories{
+    padding: 60px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.box-3{
+    width: 22%;
+    float: left;
+    margin: 1.5%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInUp 0.6s ease;
+    animation-fill-mode: both;
+    position: relative;
+}
+
+.box-3 img {
+    display: block;
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.box-3:nth-child(1) { animation-delay: 0s; }
+.box-3:nth-child(2) { animation-delay: 0.1s; }
+.box-3:nth-child(3) { animation-delay: 0.2s; }
+.box-3:nth-child(4) { animation-delay: 0.3s; }
+.box-3:nth-child(5) { animation-delay: 0.4s; }
+.box-3:nth-child(6) { animation-delay: 0.5s; }
+
+.box-3:hover {
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 0 15px 40px rgba(40, 167, 69, 0.3);
+}
+
+.box-3:hover .img-responsive {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+
+/* CSS for Food Menu */
+.food-menu{
+    background: linear-gradient(135deg, #ececec 0%, #f5f5f5 100%);
+    padding: 60px 0;
+}
+
+.food-menu-box{
+    width: 23%;
+    margin: 1%;
+    padding: 20px;
+    float: left;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeIn 0.6s ease;
+    animation-fill-mode: both;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    min-height: 350px;
+}
+
+.food-menu-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(40, 167, 69, 0.1), transparent);
+    transition: left 0.5s ease;
+    z-index: 0;
+}
+
+.food-menu-box:hover::before {
+    left: 100%;
+}
+
+.food-menu-box:nth-child(1) { animation-delay: 0.1s; }
+.food-menu-box:nth-child(2) { animation-delay: 0.2s; }
+.food-menu-box:nth-child(3) { animation-delay: 0.3s; }
+.food-menu-box:nth-child(4) { animation-delay: 0.4s; }
+.food-menu-box:nth-child(5) { animation-delay: 0.5s; }
+.food-menu-box:nth-child(6) { animation-delay: 0.6s; }
+
+.food-menu-box:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(40, 167, 69, 0.2);
+}
+
+.food-menu-img{
+    width: 100%;
+    height: 200px;
+    flex-shrink: 0;
+    transition: transform 0.4s ease;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.food-menu-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.food-menu-box:hover .food-menu-img img {
+    transform: scale(1.1);
+}
+
+.food-menu-desc{
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.food-menu-desc h4 {
+    color: #2f3542;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+    font-weight: 700;
+    text-align: center;
+}
+
+.food-menu-box:hover .food-menu-desc h4 {
+    color: #28a745;
+}
+
+.food-price{
+    font-size: 1.6rem;
+    margin: 8px 0;
+    color: #28a745;
+    font-weight: 700;
+}
+
+.food-detail{
+    font-size: 0.9rem;
+    color: #747d8c;
+    line-height: 1.5;
+    height: 40px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+
+/* CSS for Social */
+.social {
+    padding: 30px 0;
+    background: linear-gradient(135deg, #2f3542 0%, #57606f 100%);
+}
+
+.social ul{
+    list-style-type: none;
+    animation: fadeIn 0.8s ease;
+}
+
+.social ul li{
+    display: inline-block;
+    padding: 15px;
+    transition: transform 0.3s ease;
+}
+
+.social ul li:hover {
+    transform: translateY(-5px) scale(1.1);
+}
+
+/* for Order Section */
+.order{
+    width: 60%;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeIn 0.8s ease;
+}
+
+.input-responsive{
+    width: 100%;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border: 2px solid rgba(40, 167, 69, 0.3);
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.input-responsive:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    transform: translateY(-2px);
+}
+
+.order-label{
+    margin-bottom: 8px; 
+    font-weight: 600;
+    color: #2f3542;
+    font-size: 1.05rem;
+}
+
+textarea.input-responsive {
+    resize: vertical;
+    min-height: 120px;
+}
+
+
+
+/* CSS for Mobile Size or Smaller Screen */
+
+@media only screen and (max-width:768px){
+    .container{
+        width: 95%;
+    }
+
+    .navbar .container {
+        flex-direction: row;
+        padding: 10px 0;
+        align-items: center;
+    }
+
+    .logo{
+        width: auto;
+        min-width: 100px;
+        margin: 0;
+        text-align: left;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .menu{
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.4s ease;
+        padding: 0;
+    }
+
+    .menu.active {
+        max-height: 400px;
+        padding: 20px 0;
+    }
+
+    .menu ul{
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+        width: 100%;
+    }
+
+    .menu ul li{
+        margin: 5px 0;
+        width: 100%;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    }
+
+    .menu.active ul li {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .menu.active ul li:nth-child(1) { transition-delay: 0.1s; }
+    .menu.active ul li:nth-child(2) { transition-delay: 0.2s; }
+    .menu.active ul li:nth-child(3) { transition-delay: 0.3s; }
+    .menu.active ul li:nth-child(4) { transition-delay: 0.4s; }
+
+    .menu ul li a {
+        display: block;
+        padding: 12px;
+        font-size: 1.1rem;
+    }
+
+    .menu ul li a::after {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 5px;
+    }
+
+    .menu ul li a:hover::after {
+        width: 60px;
+    }
+
+    .food-search{
+        padding: 60px 0;
+    }
+
+    .food-search input[type="search"]{
+        width: 90%;
+        padding: 15px 20px;
+        margin-bottom: 15px;
+    }
+
+    .food-search input[type="search"]:focus {
+        width: 90%;
+    }
+
+    .btn{
+        width: 90%;
+        padding: 15px;
+        margin-left: 0;
+    }
+
+    .categories{
+        padding: 40px 0;
+    }
+
+    h2{
+        margin-bottom: 30px;
+        font-size: 2rem;
+    }
+
+    .box-3{
+        width: 48%;
+        margin: 1%;
+        float: left;
+    }
+    
+    @media only screen and (min-width: 769px) and (max-width: 1024px) {
+        .box-3{
+            width: 31%;
+            margin: 1%;
+        }
+        
+        .food-menu-box{
+            width: 31%;
+            margin: 1%;
+        }
+    }
+
+    .food-menu{
+        padding: 40px 0;
+    }
+
+    .food-menu-box{
+        width: 95%;
+        padding: 20px;
+        margin: 15px auto;
+        float: none;
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .food-menu-img{
+        width: 100%;
+        max-width: 300px;
+        height: 200px;
+        margin: 0 auto 15px;
+    }
+
+    .food-menu-desc{
+        width: 100%;
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .social{
+        padding: 30px 0;
+    }
+
+    .order{
+        width: 100%;
+    }
+
+    .input-responsive{
+        padding: 12px 15px;
+    }
+
+    .contact-wrapper {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .contact-form-container,
+    .contact-info-container {
+        min-width: 100%;
+    }
+
+    .contact-form {
+        padding: 25px;
+    }
+
+    .contact-info-box {
+        padding: 25px;
+    }
+
+    .info-icon {
+        font-size: 2rem;
+        margin-right: 15px;
+    }
+
+    .contact-hero {
+        padding: 60px 0;
+    }
+
+    .contact-hero p {
+        font-size: 1rem;
+    }
+
+    .map-container iframe {
+        height: 250px;
+    }
+}
+
+/* Additional smooth animations for page load */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Utility classes for additional interactivity */
+.fade-in {
+    animation: fadeIn 0.6s ease;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.6s ease;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.6s ease;
+}
+
+.scale-in {
+    animation: scaleIn 0.6s ease;
+}
+
+/* Contact Page Styles */
+.contact-hero {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.9) 0%, rgba(33, 136, 56, 0.8) 100%), url(../images/bg.jpg);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 80px 0;
+    animation: fadeIn 0.8s ease;
+}
+
+.contact-hero h2 {
+    color: white;
+    margin-bottom: 15px;
+}
+
+.contact-hero h2::after {
+    background: white;
+}
+
+.contact-hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+.contact-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.contact-wrapper {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.contact-form-container {
+    flex: 1;
+    min-width: 300px;
+    animation: slideInLeft 0.8s ease;
+}
+
+.contact-info-container {
+    flex: 1;
+    min-width: 300px;
+    animation: slideInRight 0.8s ease;
+}
+
+.contact-form {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2f3542;
+    font-size: 1rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid rgba(40, 167, 69, 0.2);
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+    background: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-input:focus {
+    border-color: #28a745;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input::placeholder {
+    color: #a0a8b0;
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.contact-info-box {
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.info-item:hover {
+    transform: translateX(10px);
+}
+
+.info-icon {
+    font-size: 2.5rem;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.info-content h3 {
+    color: #28a745;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.info-content p {
+    color: #747d8c;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.map-container {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.map-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+.map-container iframe {
+    display: block;
+    width: 100%;
+}
+
+/* Footer Styles */
+.footer {
+    background: linear-gradient(135deg, #2f3542 0%, #57606f 100%);
+    color: white;
+    padding: 30px 0;
+    margin-top: 40px;
+    animation: fadeIn 0.8s ease;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+/* Scroll to Top Button */
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4);
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.scroll-top-btn:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 6px 30px rgba(40, 167, 69, 0.6);
+}
+
+.scroll-top-btn:active {
+    transform: translateY(-2px) scale(1.05);
+}
+
+/* Loading Animation for Images */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.img-responsive {
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.2) 50%, 
+        rgba(255,255,255,0) 100%);
+    background-size: 1000px 100%;
+}
+
+/* Enhanced link animations */
+.food-menu p.text-center a {
+    display: inline-block;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.food-menu p.text-center a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(33, 136, 56, 0.4);
+}
+
+/* Animated Background Elements - Global */
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(33, 136, 56, 0.1) 100%);
+    animation: float 20s infinite ease-in-out;
+    pointer-events: none;
+    filter: blur(60px);
+}
+
+.circle-1 {
+    width: 400px;
+    height: 400px;
+    top: -200px;
+    left: -200px;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(52, 168, 83, 0.15) 100%);
+}
+
+.circle-2 {
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    right: -150px;
+    animation-duration: 15s;
+    animation-delay: 2s;
+    background: linear-gradient(135deg, rgba(33, 136, 56, 0.18) 0%, rgba(40, 167, 69, 0.12) 100%);
+}
+
+.circle-3 {
+    width: 350px;
+    height: 350px;
+    bottom: -150px;
+    left: 30%;
+    animation-duration: 25s;
+    animation-delay: 4s;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(52, 168, 83, 0.1) 100%);
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+        transform: translate(30px, -40px) scale(1.1) rotate(90deg);
+    }
+    50% {
+        transform: translate(-30px, 30px) scale(0.9) rotate(180deg);
+    }
+    75% {
+        transform: translate(50px, 20px) scale(1.05) rotate(270deg);
+    }
+}
+
+/* Additional Decorative Elements */
+.animated-bg::before,
+.animated-bg::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.animated-bg::before {
+    width: 250px;
+    height: 250px;
+    top: 20%;
+    left: 10%;
+    background: radial-gradient(circle, rgba(52, 168, 83, 0.25) 0%, transparent 70%);
+    animation: pulse 6s infinite ease-in-out;
+}
+
+.animated-bg::after {
+    width: 300px;
+    height: 300px;
+    bottom: 15%;
+    right: 15%;
+    background: radial-gradient(circle, rgba(252, 92, 125, 0.2) 0%, transparent 70%);
+    animation: pulse 8s infinite ease-in-out 2s;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* Floating Food Icons */
+.floating-icon {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.25;
+    pointer-events: none;
+    animation: floatUpDown 8s infinite ease-in-out;
+    filter: drop-shadow(0 4px 12px rgba(40, 167, 69, 0.4));
+}
+
+@keyframes floatUpDown {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.25;
+    }
+    25% {
+        transform: translateY(-30px) rotate(5deg);
+        opacity: 0.35;
+    }
+    50% {
+        transform: translateY(-60px) rotate(-5deg);
+        opacity: 0.25;
+    }
+    75% {
+        transform: translateY(-30px) rotate(3deg);
+        opacity: 0.35;
+    }
+}
+
+/* Decorative Geometric Shapes */
+.shape {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.12;
+}
+
+.shape-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    right: 25%;
+    background: linear-gradient(135deg, #28a745, #218838);
+    border-radius: 20px;
+    animation: rotate3d 15s infinite linear;
+}
+
+.shape-2 {
+    width: 60px;
+    height: 60px;
+    bottom: 25%;
+    left: 20%;
+    background: linear-gradient(135deg, #52c234, #34a853);
+    border-radius: 50%;
+    animation: rotate3d 20s infinite linear reverse;
+}
+
+.shape-3 {
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 8%;
+    background: linear-gradient(135deg, #34a853, #28a745);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    animation: rotate3d 25s infinite linear;
+}
+
+.shape-4 {
+    width: 70px;
+    height: 70px;
+    top: 35%;
+    right: 10%;
+    background: linear-gradient(135deg, #66bb6a, #81c784);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: morph 12s infinite ease-in-out;
+}
+
+@keyframes rotate3d {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes morph {
+    0%, 100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        transform: rotate(0deg);
+    }
+    25% {
+        border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+        transform: rotate(90deg);
+    }
+    50% {
+        border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+        transform: rotate(180deg);
+    }
+    75% {
+        border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+        transform: rotate(270deg);
+    }
+}
+
+/* Mobile Responsive for Animations */
+@media only screen and (max-width: 768px) {
+    .floating-icon {
+        font-size: 2.2rem;
+        opacity: 0.2;
+    }
+    
+    .shape {
+        opacity: 0.08;
+    }
+    
+    .shape-1 {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .shape-2 {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .shape-3 {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .shape-4 {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .circle-1 {
+        width: 180px;
+        height: 180px;
+        top: -140px;
+        left: -140px;
+    }
+
+    .circle-2 {
+        width: 130px;
+        height: 130px;
+        right: -100px;
+    }
+
+    .circle-3 {
+        width: 90px;
+        height: 90px;
+        bottom: -70px;
+    }
+    .food-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    }
+
+    .add-to-cart {
+        border: none;
+        background-color: #28a745;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .add-to-cart:hover {
+        background-color: #218838;
+    }
+
+        
+}
+

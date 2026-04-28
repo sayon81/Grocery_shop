@@ -1,0 +1,587 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Grocery Store - Place Order{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-section {
+        padding: 60px 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        min-height: 100vh;
+    }
+
+    .order-container {
+        max-width: 800px;
+        margin: 0 auto;
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .order-header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeInDown 0.8s ease;
+    }
+
+    .order-header h1 {
+        font-size: 2.5rem;
+        color: #2f3542;
+        margin-bottom: 10px;
+    }
+
+    .order-header p {
+        color: #747d8c;
+        font-size: 1.1rem;
+    }
+
+    .order-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        padding: 40px;
+        margin-bottom: 30px;
+        animation: slideInLeft 0.6s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .order-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 50px rgba(40, 167, 69, 0.2);
+    }
+
+    .product-summary {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+        padding: 25px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border-radius: 15px;
+        margin-bottom: 30px;
+        border: 2px solid rgba(40, 167, 69, 0.1);
+        animation: scaleIn 0.6s ease 0.2s both;
+    }
+
+    .product-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        animation: zoomIn 0.6s ease 0.3s both;
+    }
+
+    .product-info {
+        flex: 1;
+    }
+
+    .product-info h3 {
+        font-size: 1.8rem;
+        color: #2f3542;
+        margin-bottom: 10px;
+    }
+
+    .product-category {
+        color: #28a745;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .product-price-large {
+        font-size: 2rem;
+        color: #28a745;
+        font-weight: 700;
+        margin: 15px 0;
+    }
+
+    .form-section {
+        margin-top: 30px;
+    }
+
+    .form-section h2 {
+        font-size: 1.8rem;
+        color: #2f3542;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #28a745;
+        position: relative;
+    }
+
+    .form-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        animation: fadeIn 0.6s ease;
+        animation-fill-mode: both;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .form-group:nth-child(4) { animation-delay: 0.4s; }
+    .form-group:nth-child(5) { animation-delay: 0.5s; }
+
+    .form-label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #2f3542;
+        font-size: 1rem;
+    }
+
+    .form-label i {
+        color: #28a745;
+        margin-right: 8px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e1e8ed;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        outline: none;
+        background: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .form-input:focus {
+        border-color: #28a745;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .quantity-input {
+        display: flex;
+        align-items: center;
+        border: 2px solid #e1e8ed;
+        border-radius: 12px;
+        overflow: hidden;
+        background: white;
+    }
+
+    .quantity-btn {
+        background: #f8f9fa;
+        border: none;
+        padding: 12px 18px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: #2f3542;
+        transition: all 0.3s ease;
+    }
+
+    .quantity-btn:hover {
+        background: #28a745;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .quantity-value {
+        width: 80px;
+        text-align: center;
+        border: none;
+        padding: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background: white;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 20px;
+        margin-top: 40px;
+        animation: fadeInUp 0.6s ease 0.6s both;
+    }
+
+    .btn-back {
+        flex: 1;
+        padding: 15px 30px;
+        background: white;
+        color: #28a745;
+        border: 2px solid #28a745;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-back:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-confirm {
+        flex: 2;
+        padding: 15px 30px;
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-confirm::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .btn-confirm:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-confirm:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 40px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-confirm:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-confirm span {
+        position: relative;
+        z-index: 1;
+    }
+
+    .success-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .success-overlay.show {
+        display: flex;
+    }
+
+    .success-box {
+        background: white;
+        padding: 50px;
+        border-radius: 20px;
+        text-align: center;
+        max-width: 500px;
+        animation: zoomIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .success-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 30px;
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: successPulse 1.5s ease infinite;
+    }
+
+    .success-icon i {
+        font-size: 3rem;
+        color: white;
+    }
+
+    @keyframes successPulse {
+        0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+        }
+        50% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 20px rgba(40, 167, 69, 0);
+        }
+    }
+
+    .success-box h2 {
+        color: #2f3542;
+        margin-bottom: 15px;
+        font-size: 2rem;
+    }
+
+    .success-box p {
+        color: #747d8c;
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .order-card {
+            padding: 25px;
+        }
+
+        .product-summary {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .product-image {
+            width: 200px;
+            height: 200px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .order-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Order Section Starts Here -->
+<section class="order-section">
+    <div class="container">
+        <div class="order-container">
+            <div class="order-header">
+                <h1>Place Your Order</h1>
+                <p>Complete your purchase by filling in the details below</p>
+            </div>
+
+            <div class="order-card">
+                <!-- Product Summary -->
+                <div class="product-summary">
+                    <img id="orderProductImage" src="{% static 'home/images/rice1.jpg' %}" alt="Product" class="product-image">
+                    <div class="product-info">
+                        <h3 id="orderProductName">{{ product.name|default:'Premium Rice' }}</h3>
+                        <p class="product-category" id="orderProductCategory">{{ product.category.name|default:'Grains' }}</p>
+                        <p class="product-price-large" id="orderProductPrice">${{ product.price|default:'2.30' }}</p>
+                    </div>
+                </div>
+
+                <!-- Order Form -->
+                <div class="form-section">
+                    <h2><i class="fas fa-homeping-cart"></i> Order Details</h2>
+
+                    <form id="orderForm" method="post" action="{% url 'home:order_submit' %}">
+                        {% csrf_token %}
+                        <input type="hidden" id="productName" name="product_name" value="{{ product.name|default:'' }}">
+                        <input type="hidden" id="productImage" name="product_image" value="{{ product.image|default:'' }}">
+                        <input type="hidden" id="productPrice" name="product_price" value="{{ product.price|default:'' }}">
+                        <input type="hidden" id="productCategory" name="product_category" value="{{ product.category.name|default:'' }}">
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-hashtag"></i> Quantity
+                            </label>
+                            <div class="quantity-selector">
+                                <div class="quantity-input">
+                                    <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                                    <input type="number" id="quantity" name="quantity" class="quantity-value" value="1" min="1" max="100" required>
+                                    <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+                                </div>
+                                <span style="color: #747d8c;">Total: <strong id="totalPrice" style="color: #28a745; font-size: 1.2rem;">${{ product.price|default:'2.30' }}</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fullName" class="form-label">
+                                <i class="fas fa-user"></i> Full Name
+                            </label>
+                            <input type="text" id="fullName" name="full_name" class="form-input" placeholder="Enter your full name" value="{{ request.user.get_full_name|default:'' }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone" class="form-label">
+                                <i class="fas fa-phone"></i> Phone Number
+                            </label>
+                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="Enter your phone number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i> Email Address
+                            </label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email address" value="{{ request.user.email|default:'' }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address" class="form-label">
+                                <i class="fas fa-map-marker-alt"></i> Delivery Address
+                            </label>
+                            <textarea id="address" name="address" class="form-input" rows="4" placeholder="Enter your complete delivery address" required></textarea>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="javascript:history.back()" class="btn-back">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </a>
+                            <button type="submit" class="btn-confirm">
+                                <span><i class="fas fa-check-circle"></i> Confirm Order</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Order Section Ends Here -->
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="successOverlay">
+    <div class="success-box">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <h2>Order Placed Successfully!</h2>
+        <p>Thank you for your order. We'll process it shortly and send you a confirmation email.</p>
+        <a href="{% url 'home:home' %}" class="btn btn-primary">Continue homeping</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Get product details from URL parameters or Django context
+    const urlParams = new URLSearchParams(window.location.search);
+    const productName = urlParams.get('name') || '{{ product.name|default:'Premium Rice' }}';
+    const productImage = urlParams.get('image') || '{% static "home/images/rice1.jpg" %}';
+    const productPrice = urlParams.get('price') || '{{ product.price|default:'2.30' }}';
+    const productCategory = urlParams.get('category') || '{{ product.category.name|default:'Grains' }}';
+
+    // Update page content
+    document.getElementById('orderProductName').textContent = decodeURIComponent(productName);
+    document.getElementById('orderProductImage').src = decodeURIComponent(productImage);
+    document.getElementById('orderProductPrice').textContent = '$' + decodeURIComponent(productPrice);
+    document.getElementById('orderProductCategory').textContent = decodeURIComponent(productCategory);
+    
+    // Update hidden inputs
+    document.getElementById('productName').value = decodeURIComponent(productName);
+    document.getElementById('productImage').value = decodeURIComponent(productImage);
+    document.getElementById('productPrice').value = decodeURIComponent(productPrice);
+    document.getElementById('productCategory').value = decodeURIComponent(productCategory);
+
+    // Calculate total price
+    function updateTotal() {
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const priceStr = productPrice.replace('$', '');
+        const price = parseFloat(priceStr);
+        const total = (quantity * price).toFixed(2);
+        document.getElementById('totalPrice').textContent = '$' + total;
+    }
+
+    function increaseQuantity() {
+        const qtyInput = document.getElementById('quantity');
+        qtyInput.value = parseInt(qtyInput.value) + 1;
+        updateTotal();
+    }
+
+    function decreaseQuantity() {
+        const qtyInput = document.getElementById('quantity');
+        if (parseInt(qtyInput.value) > 1) {
+            qtyInput.value = parseInt(qtyInput.value) - 1;
+            updateTotal();
+        }
+    }
+
+    document.getElementById('quantity').addEventListener('input', updateTotal);
+
+    // Handle form submission
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Processing...</span>';
+        submitBtn.disabled = true;
+        
+        // Submit form data via fetch API
+        const formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success overlay
+                document.getElementById('successOverlay').classList.add('show');
+                
+                // Optionally store in localStorage as backup
+                const orderData = {
+                    productName: productName,
+                    productImage: productImage,
+                    productPrice: productPrice,
+                    productCategory: productCategory,
+                    quantity: parseInt(document.getElementById('quantity').value),
+                    fullName: document.getElementById('fullName').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    address: document.getElementById('address').value,
+                    date: new Date().toISOString(),
+                    orderId: data.order_id || 'ORD-' + Date.now()
+                };
+                
+                let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                orders.push(orderData);
+                localStorage.setItem('orders', JSON.stringify(orders));
+            } else {
+                alert('Error placing order. Please try again.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error placing order. Please try again.');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
+    });
+
+    // Initialize total price
+    updateTotal();
+</script>
+{% endblock %}

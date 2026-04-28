@@ -1,0 +1,1045 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Grocery Store - Order Successful{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-success {
+        padding: 60px 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Animated Background */
+    .success-animated-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .success-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(32, 201, 151, 0.08) 100%);
+        animation: float 20s infinite ease-in-out;
+        pointer-events: none;
+        filter: blur(60px);
+    }
+
+    .success-circle-1 {
+        width: 400px;
+        height: 400px;
+        top: -200px;
+        right: -200px;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(32, 201, 151, 0.12) 100%);
+        animation-duration: 25s;
+    }
+
+    .success-circle-2 {
+        width: 300px;
+        height: 300px;
+        bottom: -150px;
+        left: -150px;
+        background: linear-gradient(135deg, rgba(32, 201, 151, 0.13) 0%, rgba(40, 167, 69, 0.1) 100%);
+        animation-duration: 18s;
+        animation-delay: 2s;
+    }
+
+    .success-floating-icon {
+        position: absolute;
+        font-size: 3rem;
+        opacity: 0.1;
+        pointer-events: none;
+        animation: floatUpDown 15s infinite ease-in-out;
+        z-index: 1;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translate(0, 0) scale(1);
+        }
+        50% {
+            transform: translate(30px, -30px) scale(1.1);
+        }
+    }
+
+    @keyframes floatUpDown {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-30px) rotate(5deg);
+        }
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+    }
+
+    .success-card {
+        background: white;
+        padding: 50px 40px;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: slideInUp 0.8s ease;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(40, 167, 69, 0.1);
+    }
+
+    .success-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #28a745, #20c997, #28a745);
+        background-size: 200% 100%;
+        animation: gradientShift 3s linear infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+
+    .success-icon {
+        font-size: 6rem;
+        color: #28a745;
+        margin-bottom: 25px;
+        animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), pulse 2s ease 1s infinite;
+        display: inline-block;
+        text-shadow: 0 10px 20px rgba(40, 167, 69, 0.2);
+    }
+
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .success-card h2 {
+        color: #2f3542;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+        animation: fadeInUp 0.6s ease 0.2s both;
+    }
+
+    .success-message {
+        color: #6c757d;
+        font-size: 1.2rem;
+        margin-bottom: 35px;
+        line-height: 1.6;
+        animation: fadeInUp 0.6s ease 0.3s both;
+    }
+
+    /* Order Details Card */
+    .order-details-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        padding: 30px;
+        border-radius: 20px;
+        margin-bottom: 35px;
+        border: 2px solid rgba(40, 167, 69, 0.1);
+        animation: fadeInUp 0.6s ease 0.4s both;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .order-details-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(40, 167, 69, 0.05) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .detail-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .detail-header i {
+        font-size: 1.5rem;
+        color: #28a745;
+    }
+
+    .detail-header h3 {
+        color: #2f3542;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        animation: slideInRight 0.5s ease;
+        animation-fill-mode: both;
+        position: relative;
+        z-index: 2;
+    }
+
+    .detail-item:nth-child(1) { animation-delay: 0.1s; }
+    .detail-item:nth-child(2) { animation-delay: 0.15s; }
+    .detail-item:nth-child(3) { animation-delay: 0.2s; }
+    .detail-item:nth-child(4) { animation-delay: 0.25s; }
+    .detail-item:nth-child(5) { animation-delay: 0.3s; }
+    .detail-item:nth-child(6) { animation-delay: 0.35s; }
+
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+
+    .detail-item span:first-child {
+        color: #6c757d;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .detail-item span:first-child i {
+        color: #28a745;
+        font-size: 0.9rem;
+        width: 20px;
+    }
+
+    .detail-item strong {
+        color: #2f3542;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 8px 20px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+    }
+
+    .delivery-estimate {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(40, 167, 69, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        animation: fadeInUp 0.6s ease 0.5s both;
+    }
+
+    .delivery-estimate i {
+        font-size: 2rem;
+        color: #28a745;
+    }
+
+    .estimate-text h4 {
+        color: #2f3542;
+        font-size: 1rem;
+        margin-bottom: 3px;
+    }
+
+    .estimate-text p {
+        color: #28a745;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    /* Items List */
+    .items-list {
+        margin: 20px 0;
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px dashed #e9ecef;
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .item-icon {
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #28a745;
+    }
+
+    .item-details {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: #2f3542;
+        font-size: 0.95rem;
+    }
+
+    .item-quantity {
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+
+    .item-price {
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    /* Action Buttons */
+    .success-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 35px;
+        animation: fadeInUp 0.6s ease 0.6s both;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 14px 35px;
+        border: none;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn span,
+    .btn i {
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
+        box-shadow: 0 8px 25px rgba(108, 117, 125, 0.2);
+    }
+
+    .btn-secondary:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 35px rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-outline {
+        background: white;
+        color: #28a745;
+        border: 2px solid #28a745;
+        box-shadow: none;
+    }
+
+    .btn-outline:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.2);
+    }
+
+    /* Track Order Section */
+    .track-order {
+        margin-top: 40px;
+        padding: 25px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        animation: fadeInUp 0.6s ease 0.7s both;
+    }
+
+    .track-order h4 {
+        color: #2f3542;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .progress-track {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+
+    .track-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .step-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #e9ecef;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .step-dot.completed {
+        background: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    }
+
+    .step-dot.active {
+        background: #28a745;
+        animation: pulse 1s infinite;
+    }
+
+    .step-line {
+        flex: 1;
+        height: 2px;
+        background: #e9ecef;
+        margin: 0 5px;
+    }
+
+    .step-line.completed {
+        background: #28a745;
+    }
+
+    .step-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .track-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border: 2px solid #28a745;
+        border-radius: 12px;
+        color: #28a745;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .track-btn:hover {
+        background: #28a745;
+        color: white;
+    }
+
+    /* Animations */
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .order-success {
+            padding: 40px 0;
+        }
+
+        .success-card {
+            padding: 35px 25px;
+        }
+
+        .success-card h2 {
+            font-size: 2rem;
+        }
+
+        .success-message {
+            font-size: 1rem;
+        }
+
+        .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .detail-item span:first-child {
+            font-size: 0.95rem;
+        }
+
+        .detail-item strong {
+            font-size: 1rem;
+        }
+
+        .success-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .progress-track {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .track-step {
+            width: 100%;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+
+        .step-line {
+            display: none;
+        }
+
+        .success-circle-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .success-circle-2 {
+            width: 150px;
+            height: 150px;
+            bottom: -75px;
+            left: -75px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .success-card {
+            padding: 25px 20px;
+        }
+
+        .success-card h2 {
+            font-size: 1.8rem;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+        }
+
+        .order-details-card {
+            padding: 20px;
+        }
+
+        .delivery-estimate {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Order Success Section -->
+<section class="order-success">
+    <!-- Animated Background -->
+    <div class="success-animated-bg">
+        <div class="success-circle success-circle-1"></div>
+        <div class="success-circle success-circle-2"></div>
+        <div class="success-floating-icon" style="top: 15%; left: 10%; animation-delay: 0s">🥬</div>
+        <div class="success-floating-icon" style="top: 70%; right: 15%; animation-delay: 2s">🍎</div>
+        <div class="success-floating-icon" style="bottom: 20%; left: 20%; animation-delay: 4s">🥕</div>
+    </div>
+
+    <div class="container">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Order Confirmed!</h2>
+            <p class="success-message">Thank you for homeping with us. Your grocery order has been confirmed.</p>
+            
+            <div class="order-details-card">
+                <div class="detail-header">
+                    <i class="fas fa-receipt"></i>
+                    <h3>Order Details</h3>
+                </div>
+
+                <div class="detail-item">
+                    <span><i class="fas fa-hashtag"></i> Order Number:</span>
+                    <strong>#{{ order.order_number }}</strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span><i class="fas fa-calendar"></i> Order Date:</span>
+                    <strong>{{ order.created_at|date:"M d, Y - h:i A" }}</strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span><i class="fas fa-box"></i> Items:</span>
+                    <strong>{{ order.items.count }} item{{ order.items.count|pluralize }}</strong>
+                </div>
+
+                <!-- Items List -->
+                <div class="items-list">
+                    {% for item in order_items %}
+                    <div class="order-item">
+                        <div class="item-info">
+                            <div class="item-icon">
+                                <i class="fas {% if item.food.category.name == 'Vegetables' %}fa-carrot{% elif item.food.category.name == 'Fruits' %}fa-apple-alt{% elif item.food.category.name == 'Dairy' %}fa-cheese{% else %}fa-homeping-basket{% endif %}"></i>
+                            </div>
+                            <div class="item-details">
+                                <span class="item-name">{{ item.food.name }}</span>
+                                <span class="item-quantity">Qty: {{ item.quantity }} × ${{ item.price }}</span>
+                            </div>
+                        </div>
+                        <span class="item-price">${{ item.subtotal|floatformat:2 }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="detail-item">
+                    <span><i class="fas fa-dollar-sign"></i> Subtotal:</span>
+                    <strong>${{ order.subtotal|floatformat:2 }}</strong>
+                </div>
+                
+                {% if order.discount > 0 %}
+                <div class="detail-item" style="color: #28a745;">
+                    <span><i class="fas fa-tag"></i> Discount:</span>
+                    <strong>-${{ order.discount|floatformat:2 }}</strong>
+                </div>
+                {% endif %}
+                
+                <div class="detail-item">
+                    <span><i class="fas fa-truck"></i> Delivery Fee:</span>
+                    <strong>{% if order.delivery_fee > 0 %}৳{{ order.delivery_fee|floatformat:2 }}{% else %}Free{% endif %}</strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span><i class="fas fa-receipt"></i> Total Amount:</span>
+                    <strong style="font-size: 1.3rem; color: #28a745;">৳{{ order.total_amount|floatformat:2 }}</strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span><i class="fas fa-credit-card"></i> Payment Method:</span>
+                    <strong>
+                        {% if order.payment_method == 'cash' %}
+                            Cash on Delivery
+                        {% elif order.payment_method == 'bkash' %}
+                            bKash
+                        {% elif order.payment_method == 'card' %}
+                            Credit/Debit Card
+                        {% elif order.payment_method == 'nagad' %}
+                            Nagad
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </strong>
+                </div>
+                
+                <div class="detail-item">
+                    <span><i class="fas fa-info-circle"></i> Status:</span>
+                    <span class="status-badge">{{ order.get_status_display }}</span>
+                </div>
+                
+                <!-- Delivery Estimate -->
+                <div class="delivery-estimate">
+                    <i class="fas fa-clock"></i>
+                    <div class="estimate-text">
+                        <h4>Estimated Delivery Time</h4>
+                        <p>30-45 minutes</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Address -->
+            <div class="order-details-card" style="margin-top: 20px;">
+                <div class="detail-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Delivery Address</h3>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-user"></i> Name:</span>
+                    <strong>{{ order.customer_name }}</strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-phone"></i> Phone:</span>
+                    <strong>{{ order.phone_number }}</strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-envelope"></i> Email:</span>
+                    <strong>{{ order.email }}</strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-map-pin"></i> Address:</span>
+                    <strong>{{ order.address }}</strong>
+                </div>
+            </div>
+
+            <!-- Track Order Section -->
+            <div class="track-order">
+                <h4><i class="fas fa-chart-line"></i> Track Your Order</h4>
+                <div class="progress-track">
+                    <div class="track-step">
+                        <div class="step-dot completed"></div>
+                        <span class="step-label">Confirmed</span>
+                    </div>
+                    <div class="step-line completed"></div>
+                    <div class="track-step">
+                        <div class="step-dot active"></div>
+                        <span class="step-label">Processing</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="track-step">
+                        <div class="step-dot"></div>
+                        <span class="step-label">Shipped</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="track-step">
+                        <div class="step-dot"></div>
+                        <span class="step-label">Delivered</span>
+                    </div>
+                </div>
+                <a href="{% url 'home:order_detail' order.order_number %}" class="track-btn">
+                    <i class="fas fa-eye"></i>
+                    Track Order Details
+                </a>
+            </div>
+            
+            <div class="success-buttons">
+                <a href="{% url 'home:items' %}" class="btn btn-primary">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Shop More</span>
+                </a>
+                <a href="{% url 'home:order_detail' order.order_number %}" class="btn btn-outline">
+                    <i class="fas fa-receipt"></i>
+                    <span>View Order</span>
+                </a>
+                <a href="{% url 'home:index' %}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Confetti animation for success
+    function createConfetti() {
+        const colors = ['#28a745', '#20c997', '#ffc107', '#17a2b8'];
+        
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.cssText = `
+                position: fixed;
+                width: ${Math.random() * 10 + 5}px;
+                height: ${Math.random() * 10 + 5}px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                left: ${Math.random() * 100}%;
+                top: -10%;
+                opacity: ${Math.random() * 0.6 + 0.2};
+                transform: rotate(${Math.random() * 360}deg);
+                animation: fall ${Math.random() * 3 + 2}s linear forwards;
+                z-index: 9999;
+                pointer-events: none;
+            `;
+            
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+    }
+
+    // Add keyframe animation for confetti
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(${Math.random() * 360}deg);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Trigger confetti on page load
+    createConfetti();
+
+    // Print receipt functionality
+    const printBtn = document.querySelector('.btn-outline');
+    if (printBtn) {
+        printBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.print();
+        });
+    }
+
+    // Auto redirect to order tracking after 10 seconds (optional)
+    // setTimeout(() => {
+    //     window.location.href = "{% url 'home:order_detail' order.order_number %}";
+    // }, 10000);
+
+    // Add to recently viewed in localStorage
+    const recentOrders = JSON.parse(localStorage.getItem('recentOrders') || '[]');
+    const currentOrder = {
+        number: "{{ order.order_number }}",
+        date: "{{ order.created_at|date:'Y-m-d H:i:s' }}",
+        total: "{{ order.total_amount }}",
+        status: "{{ order.status }}"
+    };
+    
+    // Remove if exists
+    const index = recentOrders.findIndex(o => o.number === currentOrder.number);
+    if (index > -1) {
+        recentOrders.splice(index, 1);
+    }
+    
+    // Add to beginning
+    recentOrders.unshift(currentOrder);
+    
+    // Keep only last 5
+    if (recentOrders.length > 5) {
+        recentOrders.pop();
+    }
+    
+    localStorage.setItem('recentOrders', JSON.stringify(recentOrders));
+
+    // Animate numbers counting up
+    const totalElement = document.querySelector('.total-amount');
+    if (totalElement) {
+        const finalValue = parseFloat(totalElement.textContent);
+        let currentValue = 0;
+        const increment = finalValue / 30;
+        const duration = 1000;
+        const stepTime = duration / 30;
+        
+        const timer = setInterval(() => {
+            currentValue += increment;
+            if (currentValue >= finalValue) {
+                totalElement.textContent = finalValue.toFixed(2);
+                clearInterval(timer);
+            } else {
+                totalElement.textContent = currentValue.toFixed(2);
+            }
+        }, stepTime);
+    }
+
+    // Track order status updates
+    let statusCheckInterval = setInterval(function() {
+        fetch("{% url 'home:check_order_status' order.order_number %}")
+            .then(response => response.json())
+            .then(data => {
+                if (data.status !== "{{ order.status }}") {
+                    showNotification('Your order status has been updated!', 'info');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }
+            })
+            .catch(error => console.error('Error checking status:', error));
+    }, 30000); // Check every 30 seconds
+
+    // Clear interval on page unload
+    window.addEventListener('beforeunload', function() {
+        clearInterval(statusCheckInterval);
+    });
+
+    // Show notification function
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+            ${message}
+            <button class="btn-close" onclick="this.parentElement.style.display='none'">×</button>
+        `;
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: ${type === 'success' ? 'linear-gradient(135deg, #28a745, #218838)' : 'linear-gradient(135deg, #17a2b8, #138496)'};
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 10001;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 5000);
+    }
+
+    // Add animation styles
+    const animStyle = document.createElement('style');
+    animStyle.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(animStyle);
+});
+</script>
+{% endblock %}

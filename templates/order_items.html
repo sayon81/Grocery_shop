@@ -1,0 +1,1639 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Grocery Store - Place Order{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section - Grocery Theme */
+    .order-hero {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.9) 0%, rgba(32, 201, 151, 0.8) 100%), url('{% static "home/images/grocery-bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        padding: 80px 0;
+        animation: fadeIn 0.8s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .order-hero h2 {
+        color: white;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 2;
+        font-size: 2.5rem;
+    }
+
+    .order-hero h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: white;
+        border-radius: 4px;
+    }
+
+    .order-hero p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.8;
+        position: relative;
+        z-index: 2;
+        color: white;
+        opacity: 0.95;
+    }
+
+    /* Order Form Section */
+    .order-section {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        position: relative;
+    }
+
+    /* Animated Background for Order Page */
+    .order-page-animated-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .order-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(32, 201, 151, 0.08) 100%);
+        animation: orderFloat 20s infinite ease-in-out;
+        pointer-events: none;
+        filter: blur(60px);
+    }
+
+    .order-circle-1 {
+        width: 400px;
+        height: 400px;
+        top: -200px;
+        left: -200px;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(32, 201, 151, 0.12) 100%);
+        animation-duration: 25s;
+    }
+
+    .order-circle-2 {
+        width: 300px;
+        height: 300px;
+        top: 50%;
+        right: -150px;
+        background: linear-gradient(135deg, rgba(32, 201, 151, 0.13) 0%, rgba(40, 167, 69, 0.1) 100%);
+        animation-duration: 18s;
+        animation-delay: 2s;
+    }
+
+    .order-circle-3 {
+        width: 350px;
+        height: 350px;
+        bottom: -150px;
+        left: 30%;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.12) 0%, rgba(32, 201, 151, 0.1) 100%);
+        animation-duration: 30s;
+        animation-delay: 4s;
+    }
+
+    @keyframes orderFloat {
+        0%, 100% {
+            transform: translate(0, 0) scale(1) rotate(0deg);
+        }
+        25% {
+            transform: translate(40px, -50px) scale(1.15) rotate(90deg);
+        }
+        50% {
+            transform: translate(-40px, 40px) scale(0.9) rotate(180deg);
+        }
+        75% {
+            transform: translate(60px, 25px) scale(1.1) rotate(270deg);
+        }
+    }
+
+    .order-floating-icon {
+        position: absolute;
+        font-size: 3.5rem;
+        opacity: 0.15;
+        pointer-events: none;
+        animation: orderFloatUpDown 10s infinite ease-in-out;
+        filter: drop-shadow(0 4px 12px rgba(40, 167, 69, 0.2));
+        z-index: 1;
+    }
+
+    @keyframes orderFloatUpDown {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 0.15;
+        }
+        25% {
+            transform: translateY(-40px) rotate(8deg);
+            opacity: 0.2;
+        }
+        50% {
+            transform: translateY(-70px) rotate(-8deg);
+            opacity: 0.15;
+        }
+        75% {
+            transform: translateY(-40px) rotate(5deg);
+            opacity: 0.2;
+        }
+    }
+
+    .order-shape {
+        position: absolute;
+        pointer-events: none;
+        opacity: 0.1;
+        z-index: 1;
+        border: 2px solid rgba(40, 167, 69, 0.15);
+    }
+
+    .order-shape-1 {
+        width: 100px;
+        height: 100px;
+        top: 15%;
+        right: 20%;
+        border-radius: 20px;
+        animation: orderRotate3d 18s infinite linear;
+    }
+
+    .order-shape-2 {
+        width: 80px;
+        height: 80px;
+        bottom: 30%;
+        left: 15%;
+        border-radius: 50%;
+        animation: orderRotate3d 22s infinite linear reverse;
+    }
+
+    .order-shape-3 {
+        width: 120px;
+        height: 120px;
+        top: 55%;
+        left: 5%;
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        animation: orderRotate3d 28s infinite linear;
+    }
+
+    .order-shape-4 {
+        width: 90px;
+        height: 90px;
+        top: 40%;
+        right: 8%;
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        animation: orderMorph 15s infinite ease-in-out;
+    }
+
+    @keyframes orderRotate3d {
+        0% {
+            transform: rotate(0deg) scale(1);
+        }
+        50% {
+            transform: rotate(180deg) scale(1.25);
+        }
+        100% {
+            transform: rotate(360deg) scale(1);
+        }
+    }
+
+    @keyframes orderMorph {
+        0%, 100% {
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            transform: rotate(0deg);
+        }
+        25% {
+            border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+            transform: rotate(90deg);
+        }
+        50% {
+            border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+            transform: rotate(180deg);
+        }
+        75% {
+            border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+            transform: rotate(270deg);
+        }
+    }
+
+    /* Modern Order Form */
+    .order-form-modern {
+        max-width: 1200px;
+        margin: 0 auto;
+        animation: fadeInUp 1s ease 0.3s both;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Two Column Layout Container */
+    .order-layout-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+        align-items: stretch;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Left Column: Selected Food + Order Summary */
+    .order-left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        height: 100%;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    /* Right Column: Delivery Details */
+    .order-right-column {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    /* Food Card */
+    .food-card-modern {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0;
+        overflow: hidden;
+        animation: slideInLeft 0.8s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid rgba(40, 167, 69, 0.1);
+    }
+
+    .food-card-modern:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 50px rgba(40, 167, 69, 0.15);
+    }
+
+    .food-card-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 20px 30px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .food-card-header i {
+        font-size: 1.5rem;
+        animation: bounce 2s infinite;
+    }
+
+    .food-card-content {
+        padding: 30px;
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    .food-image-wrapper {
+        position: relative;
+        flex-shrink: 0;
+        width: 200px;
+        height: 200px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        animation: scaleIn 0.8s ease 0.4s both;
+    }
+
+    .food-image-animated {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .food-image-wrapper:hover .food-image-animated {
+        transform: scale(1.1) rotate(2deg);
+    }
+
+    .food-image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(32, 201, 151, 0.2) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .food-image-wrapper:hover .food-image-overlay {
+        opacity: 1;
+    }
+
+    .food-image-overlay i {
+        font-size: 3rem;
+        color: white;
+        animation: pulse 1.5s infinite;
+    }
+
+    .food-details-modern {
+        flex: 1;
+        animation: slideInRight 0.8s ease 0.5s both;
+    }
+
+    .food-name-animated {
+        font-size: 2rem;
+        color: #2f3542;
+        margin-bottom: 10px;
+        font-weight: 700;
+        animation: fadeIn 0.8s ease 0.6s both;
+    }
+
+    .food-category-badge {
+        display: inline-block;
+        background: #e8f5e9;
+        color: #28a745;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .food-price-modern {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        margin-bottom: 15px;
+        animation: fadeIn 0.8s ease 0.7s both;
+    }
+
+    .currency {
+        font-size: 1.5rem;
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .price-value {
+        font-size: 2.5rem;
+        color: #28a745;
+        font-weight: 700;
+    }
+
+    .original-price {
+        color: #6c757d;
+        font-size: 1.1rem;
+        text-decoration: line-through;
+        margin-left: 10px;
+    }
+
+    .food-description-modern {
+        color: #6c757d;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        font-size: 1rem;
+        animation: fadeIn 0.8s ease 0.8s both;
+    }
+
+    .food-weight-info {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        color: #495057;
+        font-size: 0.95rem;
+    }
+
+    .food-weight-info i {
+        color: #28a745;
+        margin-right: 5px;
+    }
+
+    /* Quantity Selector */
+    .quantity-selector {
+        animation: fadeIn 0.8s ease 0.9s both;
+    }
+
+    .quantity-label {
+        display: block;
+        font-weight: 600;
+        color: #2f3542;
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+    }
+
+    .quantity-label i {
+        margin-right: 8px;
+        color: #28a745;
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        max-width: 200px;
+    }
+
+    .quantity-btn {
+        width: 45px;
+        height: 45px;
+        border: 2px solid #28a745;
+        background: white;
+        color: #28a745;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity-btn:hover {
+        background: #28a745;
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .quantity-btn:active {
+        transform: scale(0.95);
+    }
+
+    .quantity-input {
+        flex: 1;
+        height: 45px;
+        text-align: center;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2f3542;
+        transition: all 0.3s ease;
+    }
+
+    .quantity-input:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    }
+
+    /* Delivery Card */
+    .delivery-card-modern {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0;
+        overflow: hidden;
+        animation: slideInRight 0.8s ease 0.6s both;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        flex: 1;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid rgba(40, 167, 69, 0.1);
+    }
+
+    .delivery-card-modern:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 50px rgba(40, 167, 69, 0.15);
+    }
+
+    .delivery-card-header {
+        background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+        color: white;
+        padding: 20px 30px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .delivery-card-header i {
+        font-size: 1.5rem;
+    }
+
+    .delivery-card-content {
+        padding: 30px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group-modern {
+        margin-bottom: 25px;
+        animation: fadeInUp 0.6s ease both;
+    }
+
+    .form-group-modern:nth-child(1) { animation-delay: 0.1s; }
+    .form-group-modern:nth-child(2) { animation-delay: 0.2s; }
+    .form-group-modern:nth-child(3) { animation-delay: 0.3s; }
+    .form-group-modern:nth-child(4) { animation-delay: 0.4s; }
+    .form-group-modern:nth-child(5) { animation-delay: 0.5s; }
+
+    .form-label-modern {
+        display: block;
+        font-weight: 600;
+        color: #2f3542;
+        margin-bottom: 10px;
+        font-size: 1.05rem;
+    }
+
+    .form-label-modern i {
+        margin-right: 8px;
+        color: #28a745;
+    }
+
+    .order-form-modern input[type="text"],
+    .order-form-modern input[type="tel"],
+    .order-form-modern input[type="email"],
+    .order-form-modern input[type="number"],
+    .order-form-modern textarea {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        background: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .order-form-modern input[type="text"]:focus,
+    .order-form-modern input[type="tel"]:focus,
+    .order-form-modern input[type="email"]:focus,
+    .order-form-modern input[type="number"]:focus,
+    .order-form-modern textarea:focus {
+        outline: none;
+        border-color: #28a745;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .order-form-modern textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        animation: shake 0.5s ease;
+    }
+
+    .form-hint {
+        color: #6c757d;
+        font-size: 0.85rem;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-style: italic;
+    }
+
+    .form-hint i {
+        color: #28a745;
+    }
+
+    /* Summary Card */
+    .summary-card-modern {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(40, 167, 69, 0.2);
+        margin-bottom: 0;
+        overflow: hidden;
+        animation: scaleIn 0.8s ease 0.8s both;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .summary-card-modern:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(40, 167, 69, 0.3);
+    }
+
+    .summary-header {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 20px 30px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        backdrop-filter: blur(10px);
+    }
+
+    .summary-content {
+        padding: 30px;
+        color: white;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .summary-row:last-child {
+        border-bottom: none;
+    }
+
+    .summary-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+    }
+
+    .summary-value {
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    .summary-divider {
+        height: 2px;
+        background: rgba(255, 255, 255, 0.3);
+        margin: 15px 0;
+        border-radius: 2px;
+    }
+
+    .total-row {
+        padding-top: 15px;
+        margin-top: 10px;
+        border-top: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .total-label {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .total-value {
+        font-size: 2rem;
+        font-weight: 700;
+        animation: pulse 2s infinite;
+    }
+
+    .delivery-charge-note {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 10px;
+        text-align: right;
+    }
+
+    /* Action Buttons */
+    .form-actions-modern {
+        display: flex;
+        gap: 20px;
+        margin-top: 30px;
+        animation: fadeInUp 0.8s ease 1s both;
+        width: 100%;
+    }
+
+    .btn-modern {
+        flex: 1;
+        padding: 18px 30px;
+        border: none;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-modern::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .btn-modern:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-modern span,
+    .btn-modern i {
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-primary-modern {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-primary-modern:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-primary-modern:active {
+        transform: translateY(-1px) scale(1);
+    }
+
+    .btn-secondary-modern {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        color: white;
+        box-shadow: 0 8px 25px rgba(108, 117, 125, 0.2);
+    }
+
+    .btn-secondary-modern:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 35px rgba(108, 117, 125, 0.3);
+    }
+
+    /* Messages */
+    .messages {
+        margin-bottom: 30px;
+    }
+
+    .alert {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideInDown 0.5s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .alert-error, .alert-warning {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+
+    .alert i {
+        margin-right: 12px;
+        font-size: 1.2rem;
+    }
+
+    .btn-close {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .btn-close:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.1);
+    }
+
+    /* Animations */
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .order-layout-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .order-left-column {
+            gap: 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .order-hero {
+            padding: 60px 0;
+        }
+        
+        .order-hero h2 {
+            font-size: 2rem;
+        }
+        
+        .order-hero p {
+            font-size: 1rem;
+        }
+        
+        .order-section {
+            padding: 60px 0;
+        }
+        
+        .food-card-content {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .food-image-wrapper {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        
+        .food-weight-info {
+            justify-content: center;
+        }
+        
+        .quantity-controls {
+            max-width: 100%;
+            justify-content: center;
+        }
+        
+        .form-actions-modern {
+            flex-direction: column;
+        }
+        
+        .summary-row {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+        }
+        
+        .order-form-modern {
+            padding: 0 15px;
+        }
+        
+        /* Animated Background Responsive */
+        .order-circle-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            left: -100px;
+        }
+        
+        .order-circle-2 {
+            width: 150px;
+            height: 150px;
+            right: -75px;
+        }
+        
+        .order-circle-3 {
+            width: 180px;
+            height: 180px;
+            bottom: -90px;
+        }
+        
+        .order-floating-icon {
+            font-size: 2.5rem;
+            opacity: 0.1;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .order-hero {
+            padding: 40px 0;
+        }
+        
+        .order-hero h2 {
+            font-size: 1.8rem;
+        }
+        
+        .order-section {
+            padding: 40px 0;
+        }
+        
+        .food-card-header,
+        .delivery-card-header,
+        .summary-header {
+            padding: 15px 20px;
+            font-size: 1.1rem;
+        }
+        
+        .food-card-content,
+        .delivery-card-content,
+        .summary-content {
+            padding: 20px;
+        }
+        
+        .food-name-animated {
+            font-size: 1.5rem;
+        }
+        
+        .price-value {
+            font-size: 2rem;
+        }
+        
+        .food-image-wrapper {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .order-floating-icon {
+            font-size: 2rem;
+        }
+        button[type="submit"]:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    
+    <div class="container">
+        <form method="post" class="order-form-modern" action="{% url 'home:order' %}">
+            {% csrf_token %}
+            
+            {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                    {% if message.tags == 'error' or message.tags == 'warning' %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">×</button>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Two Column Layout -->
+            <div class="order-layout-container">
+                <!-- Left Column: Selected Food + Order Summary -->
+                <div class="order-left-column">
+                    <!-- Selected Food Card -->
+                    <div class="food-card-modern">
+                        <div class="food-card-header">
+                            <i class="fas fa-homeping-basket"></i>
+                            <span>Selected Item</span>
+                        </div>
+                        <div class="food-card-content">
+                            <div class="food-image-wrapper">
+                                {% if product.image %}
+                                    <img src="{{ product.image }}" alt="{{ product.name }}" class="food-image-animated">
+                                {% else %}
+                                    <img src="{% static 'images/placeholder.jpg' %}" alt="{{ product.name }}" class="food-image-animated">
+                                {% endif %}
+                                <div class="food-image-overlay">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                            </div>
+
+                            <div class="food-details-modern">
+                                <h3 class="food-name-animated">{{ product.name }}</h3>
+                                <span class="food-category-badge">
+                                    <i class="fas fa-tag"></i> {{ product.category.name }}
+                                </span>
+                                <div class="food-price-modern">
+                                    <span class="currency">৳</span>
+                                    <span class="price-value unit-price">{{ product.price }}</span>
+                                    {% if product.original_price %}
+                                        <span class="original-price">৳{{ product.original_price }}</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="food-weight-info">
+                                    <span><i class="fas fa-weight"></i> 
+                                        {% if product.weight %}
+                                            {{ product.weight }} {{ product.weight_unit }}
+                                        {% else %}
+                                            {{ product.get_unit_display }}
+                                        {% endif %}
+                                    </span>
+                                    <span><i class="fas fa-box"></i> In Stock: {{ product.stock }}</span>
+                                </div>
+                                
+                                <p class="food-description-modern">{{ product.description|truncatechars:150 }}</p>
+
+                                <div class="quantity-selector">
+                                    <label class="quantity-label">
+                                        <i class="fas fa-sort-numeric-up"></i> Quantity
+                                    </label>
+                                    <div class="quantity-controls">
+                                        <button type="button" class="quantity-btn minus-btn" id="decreaseQty" {% if product.stock <= 0 %}disabled{% endif %}>
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="number" name="quantity" class="quantity-input" id="quantityInput" value="1" min="1" max="{{ product.stock }}" {% if product.stock <= 0 %}disabled{% endif %} required>
+                                        <button type="button" class="quantity-btn plus-btn" id="increaseQty" {% if product.stock <= 0 %}disabled{% endif %}>
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary Card -->
+                    <div class="summary-card-modern">
+                        <div class="summary-header">
+                            <i class="fas fa-receipt"></i>
+                            <span>Order Summary</span>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-row">
+                                <span class="summary-label">
+                                    <i class="fas fa-sort-numeric-up"></i> Quantity:
+                                </span>
+                                <span class="summary-value">
+                                    <span id="displayQuantity">1</span> x ৳<span class="unit-price">{{ product.price }}</span>
+                                </span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">
+                                    <i class="fas fa-calculator"></i> Subtotal:
+                                </span>
+                                <span class="summary-value">
+                                    ৳<span id="subtotalAmount">{{ product.price }}</span>
+                                </span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">
+                                    <i class="fas fa-truck"></i> Delivery Fee:
+                                </span>
+                                <span class="summary-value" id="deliveryFee">৳ 80</span>
+                            </div>
+                            {% if product.price >= 50 %}
+                            <div class="summary-row" style="color: #ffc107;">
+                                <span class="summary-label">
+                                    <i class="fas fa-gift"></i> Free Delivery:
+                                </span>
+                                <span class="summary-value">-৳ 80</span>
+                            </div>
+                            {% endif %}
+                            <div class="summary-divider"></div>
+                            <div class="summary-row total-row">
+                                <span class="summary-label total-label">
+                                    <i class="fas fa-dollar-sign"></i> Total:
+                                </span>
+                                <span class="summary-value total-value">
+                                    ৳<span id="totalAmount">{{ product.price }}</span>
+                                </span>
+                            </div>
+                            <div class="delivery-charge-note">
+                                <i class="fas fa-info-circle"></i> Free delivery on orders above ৳ 500
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Delivery Details -->
+                <div class="order-right-column">
+                    <!-- Delivery Details Card -->
+                    <div class="delivery-card-modern">
+                        <div class="delivery-card-header">
+                            <i class="fas fa-truck"></i>
+                            <span>Delivery Details</span>
+                        </div>
+                        <div class="delivery-card-content">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="product_name" value="{{ product.name }}">
+                            <input type="hidden" name="product_price" value="{{ product.price }}">
+                            <input type="hidden" name="product_category" value="{{ product.category.name }}">
+                            <input type="hidden" name="product_image" value="{{ product.image }}">
+                            
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <i class="fas fa-user"></i> Full Name *
+                                </label>
+                                {{ form.customer_name }}
+                                {% if form.customer_name.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.customer_name.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <i class="fas fa-phone"></i> Phone Number *
+                                </label>
+                                {{ form.phone_number }}
+                                {% if form.phone_number.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.phone_number.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <i class="fas fa-envelope"></i> Email *
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.email.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <i class="fas fa-map-marker-alt"></i> Delivery Address *
+                                </label>
+                                {{ form.address }}
+                                {% if form.address.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.address.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions-modern">
+            <a href="{% url 'home:items' %}" class="btn-modern btn-secondary-modern">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Items</span>
+            </a>
+            
+            {% if product.stock > 0 %}
+                <button type="submit" name="submit" class="btn-modern btn-primary-modern">
+                    <span>Confirm Order</span>
+                    <i class="fas fa-check-circle"></i>
+                </button>
+            {% else %}
+                <button type="button" class="btn-modern btn-primary-modern" onclick="goToPayment()">
+                    <span>Out for Delivery</span>
+                    <i class="fas fa-check-circle"></i>
+                </button>
+            {% endif %}
+        </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Define goToPayment function at the top so it's available globally
+function goToPayment() {
+    console.log("goToPayment function called");
+    
+    // Get the current quantity from the input
+    const quantityInput = document.getElementById('quantityInput');
+    if (!quantityInput) {
+        console.error("Quantity input not found!");
+        return;
+    }
+    
+    const quantity = quantityInput.value;
+    console.log("Selected quantity:", quantity);
+    
+    // Get product details
+    const productName = "{{ product.name|escapejs }}";
+    const productPrice = "{{ product.price }}";
+    
+    console.log("Product name:", productName);
+    console.log("Product price:", productPrice);
+    
+    // Build the URL with the current quantity
+    const paymentUrl = "{% url 'home:payment' %}?name=" + encodeURIComponent(productName) + 
+                      "&price=" + encodeURIComponent(productPrice) + 
+                      "&quantity=" + quantity;
+    
+    console.log("Redirecting to:", paymentUrl);
+    window.location.href = paymentUrl;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded");
+    
+    const quantityInput = document.getElementById('quantityInput');
+    const displayQuantity = document.getElementById('displayQuantity');
+    const subtotalAmount = document.getElementById('subtotalAmount');
+    const totalAmount = document.getElementById('totalAmount');
+    const deliveryFee = document.getElementById('deliveryFee');
+    const unitPriceElement = document.querySelector('.unit-price');
+    const unitPrice = parseFloat(unitPriceElement ? unitPriceElement.textContent : 0);
+    const decreaseBtn = document.getElementById('decreaseQty');
+    const increaseBtn = document.getElementById('increaseQty');
+    const form = document.querySelector('.order-form-modern');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const stockMax = quantityInput ? parseInt(quantityInput.getAttribute('max')) || 20 : 20;
+    
+    // Update total price function
+    function updateTotal() {
+        const quantity = parseInt(quantityInput ? quantityInput.value : 1) || 1;
+        const subtotal = unitPrice * quantity;
+        const delivery = subtotal >= 500 ? 0 : 80;
+        const total = subtotal + delivery;
+        
+        // Animate the updates
+        [subtotalAmount, totalAmount].forEach(elem => {
+            if (elem) {
+                elem.style.transform = 'scale(1.2)';
+                elem.style.color = '#ffb86c';
+            }
+        });
+        
+        setTimeout(() => {
+            if (subtotalAmount) subtotalAmount.textContent = subtotal.toFixed(2);
+            if (totalAmount) totalAmount.textContent = total.toFixed(2);
+            if (deliveryFee) {
+                if (delivery === 500) {
+                    deliveryFee.innerHTML = '<span style="text-decoration: line-through; opacity: 0.7;">৳ 80</span> <span style="color: #ffc107;">Free</span>';
+                } else {
+                    deliveryFee.textContent = '৳ 80';
+                }
+            }
+            if (displayQuantity) displayQuantity.textContent = quantity;
+            
+            setTimeout(() => {
+                [subtotalAmount, totalAmount].forEach(elem => {
+                    if (elem) {
+                        elem.style.transform = 'scale(1)';
+                        elem.style.color = '';
+                    }
+                });
+            }, 300);
+        }, 150);
+    }
+    
+    // Quantity decrease button
+    if (decreaseBtn && quantityInput) {
+        decreaseBtn.addEventListener('click', function() {
+            const currentValue = parseInt(quantityInput.value) || 1;
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+                updateTotal();
+                
+                // Button animation
+                this.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            } else {
+                // Shake animation when at minimum
+                this.style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 500);
+            }
+        });
+    }
+    
+    // Quantity increase button
+    if (increaseBtn && quantityInput) {
+        increaseBtn.addEventListener('click', function() {
+            const currentValue = parseInt(quantityInput.value) || 1;
+            
+            if (currentValue < stockMax) {
+                quantityInput.value = currentValue + 1;
+                updateTotal();
+                
+                // Button animation
+                this.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            } else {
+                // Shake animation when at maximum
+                this.style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 500);
+            }
+        });
+    }
+    
+    // Quantity input change
+    if (quantityInput) {
+        quantityInput.addEventListener('input', function() {
+            let value = parseInt(this.value) || 1;
+            
+            if (value > stockMax) {
+                value = stockMax;
+                this.value = stockMax;
+            } else if (value < 1) {
+                value = 1;
+                this.value = 1;
+            }
+            
+            updateTotal();
+        });
+        
+        quantityInput.addEventListener('blur', function() {
+            if (!this.value || parseInt(this.value) < 1) {
+                this.value = 1;
+                updateTotal();
+            }
+        });
+    }
+    
+    // Add ripple animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Animate form fields on focus
+    const formInputs = form ? form.querySelectorAll('input, textarea') : [];
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateX(5px)';
+            this.parentElement.style.transition = 'transform 0.3s ease';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateX(0)';
+        });
+    });
+    
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe cards
+    const cards = document.querySelectorAll('.food-card-modern, .delivery-card-modern, .summary-card-modern');
+    cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+    
+    // Initialize total on page load
+    updateTotal();
+    
+    // Auto-dismiss messages
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            if (alert.style.display !== 'none') {
+                alert.style.display = 'none';
+            }
+        }, 5000);
+    });
+    
+    const phoneInput = document.querySelector('input[name="phone_number"]');
+    const emailInput = document.querySelector('input[name="email"]');
+    const addressInput = document.querySelector('textarea[name="address"]');
+    const orderForm = document.querySelector('.order-form-modern');
+    const submitButton = document.querySelector('button[type="submit"]');
+    
+    // Function to check if all fields are filled
+    function checkFieldsFilled() {
+        let allFilled = true;
+        
+        if (phoneInput && !phoneInput.value.trim()) {
+            allFilled = false;
+            phoneInput.style.borderColor = '#dc3545';
+        } else if (phoneInput) {
+            phoneInput.style.borderColor = '#e0e0e0';
+        }
+        
+        if (emailInput && !emailInput.value.trim()) {
+            allFilled = false;
+            emailInput.style.borderColor = '#dc3545';
+        } else if (emailInput) {
+            emailInput.style.borderColor = '#e0e0e0';
+        }
+        
+        if (addressInput && !addressInput.value.trim()) {
+            allFilled = false;
+            addressInput.style.borderColor = '#dc3545';
+        } else if (addressInput) {
+            addressInput.style.borderColor = '#e0e0e0';
+        }
+        
+        // Enable or disable the submit button
+        if (submitButton) {
+            submitButton.disabled = !allFilled;
+        }
+        
+        return allFilled;
+    }
+    
+    // Add event listeners to check on every input
+    if (phoneInput) {
+        phoneInput.addEventListener('input', checkFieldsFilled);
+        phoneInput.addEventListener('keyup', checkFieldsFilled);
+    }
+    if (emailInput) {
+        emailInput.addEventListener('input', checkFieldsFilled);
+        emailInput.addEventListener('keyup', checkFieldsFilled);
+    }
+    if (addressInput) {
+        addressInput.addEventListener('input', checkFieldsFilled);
+        addressInput.addEventListener('keyup', checkFieldsFilled);
+    }
+    
+    // Run check on page load
+    checkFieldsFilled();
+    
+    // Form submission validation
+    if (orderForm) {
+        // Remove any existing submit listeners to avoid conflicts
+        orderForm.removeEventListener('submit', orderForm.submitHandler);
+        
+        // Add new submit handler
+        orderForm.submitHandler = function(e) {
+            if (!checkFieldsFilled()) {
+                e.preventDefault();
+                alert('Please fill in all required fields:\n- Phone Number\n- Email\n- Delivery Address');
+                return false;
+            }
+            
+            // Show loading state
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Processing...</span>';
+            }
+            
+            return true;
+        };
+        
+        orderForm.addEventListener('submit', orderForm.submitHandler);
+    }
+    
+    
+
+    if (orderForm && submitButton) {
+        // Remove the existing submit event listener by replacing the form's submit handler
+        // This is a hack to ensure our validation runs first
+        const oldSubmitHandler = orderForm.onsubmit;
+        orderForm.onsubmit = null;
+        
+        orderForm.addEventListener('submit', function(e) {
+            // First check if fields are valid
+            if (!validateRequiredFields()) {
+                e.preventDefault();
+                alert('Please fill in all required fields: Phone Number, Email, and Delivery Address');
+                return false;
+            }
+            
+            // If valid, disable button and show loading
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Processing...</span>';
+            submitButton.style.opacity = '0.8';
+            
+            // Add ripple effect
+            const ripple = document.createElement('span');
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                width: 100px;
+                height: 100px;
+                margin-top: -50px;
+                margin-left: -50px;
+                left: 50%;
+                top: 50%;
+                animation: ripple 0.6s ease-out;
+            `;
+            submitButton.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+            
+            // Let the form submit
+            return true;
+        });
+    }
+});
+
+</script>
+{% endblock %}

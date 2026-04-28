@@ -1,0 +1,641 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Grocery Store - Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Carousel Styles */
+    .hero-carousel {
+        position: relative;
+        width: 100%;
+        height: 600px;
+        overflow: hidden;
+        margin-top: 0;
+    }
+
+    .carousel-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .carousel-slides {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .carousel-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: 120%;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transform: scale(1.05);
+        transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), background-size 8s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .carousel-slide.active {
+        opacity: 1;
+        z-index: 1;
+        transform: scale(1);
+        background-size: 100%;
+        animation: backgroundZoom 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes backgroundZoom {
+        0% {
+            background-size: 100%;
+        }
+        100% {
+            background-size: 110%;
+        }
+    }
+
+    .carousel-slide::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        transition: opacity 1.2s ease;
+    }
+
+    .carousel-content {
+        text-align: center;
+        color: white;
+        z-index: 2;
+        width: 100%;
+        max-width: 900px;
+        padding: 0 20px;
+        padding-bottom: 80px;
+        animation: fadeInUp 1s ease;
+    }
+
+    .carousel-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        animation: slideInDown 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both;
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    .carousel-slide.active .carousel-title {
+        animation: slideInDown 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both;
+    }
+
+    .carousel-subtitle {
+        font-size: 1.5rem;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+        margin-bottom: 40px;
+        animation: slideInUp 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s both;
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    .carousel-slide.active .carousel-subtitle {
+        animation: slideInUp 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s both;
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .hero-search-overlay {
+        position: absolute;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        display: flex;
+        justify-content: center;
+        pointer-events: none;
+    }
+
+    .hero-search-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        max-width: 680px;
+        width: 100%;
+        padding: 0 24px;
+        animation: zoomIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.7s both;
+        pointer-events: auto;
+    }
+
+    .search-bar {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 60px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 6px 6px 6px 24px;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid transparent;
+    }
+
+    .search-bar:focus-within {
+        background: white;
+        box-shadow: 0 12px 48px rgba(40, 167, 69, 0.22), 0 4px 12px rgba(0, 0, 0, 0.06);
+        border-color: rgba(40, 167, 69, 0.35);
+        transform: translateY(-2px);
+    }
+
+    .search-icon {
+        font-size: 1.15rem;
+        color: #28a745;
+        flex-shrink: 0;
+        transition: color 0.3s ease;
+    }
+
+    .search-bar:focus-within .search-icon {
+        color: #1e7e34;
+    }
+
+    .hero-search-input {
+        flex: 1;
+        padding: 16px 16px;
+        font-size: 1.08rem;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #2d3436;
+        letter-spacing: 0.01em;
+    }
+
+    .hero-search-input::placeholder {
+        color: #a4b0be;
+        font-weight: 400;
+    }
+
+    .hero-search-input::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+
+    .hero-search-btn {
+        flex-shrink: 0;
+        padding: 14px 32px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        white-space: nowrap;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.35);
+    }
+
+    .hero-search-btn:hover {
+        background: linear-gradient(135deg, #218838 0%, #1baa80 100%);
+        box-shadow: 0 6px 24px rgba(40, 167, 69, 0.45);
+        transform: scale(1.03);
+    }
+
+    .hero-search-btn:active {
+        transform: scale(0.98);
+    }
+
+    .search-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .search-tag {
+        padding: 6px 16px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.88);
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        letter-spacing: 0.02em;
+    }
+
+    .search-tag:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    /* Carousel Controls */
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(40, 167, 69, 0.3);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: #28a745;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        opacity: 0.9;
+    }
+
+    .carousel-btn:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-50%) scale(1.2);
+        box-shadow: 0 10px 40px rgba(40, 167, 69, 0.6);
+        opacity: 1;
+        border-color: #28a745;
+    }
+
+    .carousel-btn:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    .carousel-prev {
+        left: 30px;
+    }
+
+    .carousel-next {
+        right: 30px;
+    }
+
+    /* Carousel Indicators */
+    .carousel-indicators {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 15px;
+        z-index: 10;
+    }
+
+    .indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border: 2px solid white;
+        position: relative;
+    }
+
+    .indicator:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: scale(1.3);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    .indicator.active {
+        background: #28a745;
+        border-color: #28a745;
+        width: 40px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+        transform: scale(1.1);
+    }
+
+    @media only screen and (max-width: 768px) {
+        .hero-carousel {
+            height: 500px;
+        }
+
+        .carousel-title {
+            font-size: 2.5rem;
+        }
+
+        .carousel-subtitle {
+            font-size: 1.2rem;
+        }
+
+        .hero-search-overlay {
+            bottom: 55px;
+        }
+
+        .hero-search-form {
+            padding: 0 16px;
+            gap: 10px;
+        }
+
+        .search-bar {
+            padding: 4px 4px 4px 16px;
+        }
+
+        .hero-search-input {
+            padding: 12px 10px;
+            font-size: 0.95rem;
+        }
+
+        .hero-search-btn {
+            padding: 12px 20px;
+            font-size: 0.85rem;
+        }
+
+        .search-tags {
+            gap: 6px;
+        }
+
+        .search-tag {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+
+        .carousel-btn {
+            width: 45px;
+            height: 45px;
+            font-size: 1rem;
+        }
+
+        .carousel-prev {
+            left: 15px;
+        }
+
+        .carousel-next {
+            right: 15px;
+        }
+
+        .carousel-indicators {
+            bottom: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Carousel-->
+
+<section class="hero-carousel">
+    <div class="carousel-container">
+        <div class="carousel-slides">
+            {% for slide in carousel_slides %}
+            <div class="carousel-slide {% if forloop.first %}active{% endif %}" 
+            style="background-image: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.7) 100%), url('{% static slide.image %}');">
+                <div class="carousel-content">
+                    <h1 class="carousel-title">{{ slide.title }}</h1>
+                    <p class="carousel-subtitle">{{ slide.subtitle }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Search form outside slides so typed text persists across transitions -->
+        <div class="hero-search-overlay">
+            <form action="{% url 'home:item_search' %}" method="GET" class="hero-search-form" autocomplete="off">
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="search" name="q" placeholder="Search for fresh fruits, vegetables, dairy..." required class="hero-search-input">
+                    <button type="submit" class="hero-search-btn">
+                        Search
+                    </button>
+                </div>
+                <div class="search-tags">
+                    <span class="search-tag" data-query="Fruits">Fruits</span>
+                    <span class="search-tag" data-query="Vegetables">Vegetables</span>
+                    <span class="search-tag" data-query="Dairy">Dairy</span>
+                    <span class="search-tag" data-query="Meat">Meat</span>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Carousel Controls -->
+        <button class="carousel-btn carousel-prev" onclick="changeSlide(-1)">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel-btn carousel-next" onclick="changeSlide(1)">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+            {% for slide in carousel_slides %}
+            <span class="indicator {% if forloop.first %}active{% endif %}" onclick="currentSlide({{ forloop.counter }})"></span>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Hero Carousel -->
+
+<!-- Categories -->
+<section class="categories">
+    <div class="container">
+        <h2 class="text-center">Explore Categories</h2>
+
+        {% for category in categories %}
+        <a href="{% url 'home:category_items' category.slug %}">
+            <div class="box-3 float-container">
+                {% if category.image %}
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-responsive img-curve">
+                {% else %}
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="{{ category.name }}" class="img-responsive img-curve">
+                {% endif %}
+                <h3 class="float-text text-white">{{ category.name }}</h3>
+            </div>
+        </a>
+        {% endfor %}
+
+        <div class="clearfix"></div>
+    </div>
+</section>
+<!-- Categories -->
+
+{% load static %}
+
+<!-- Grocery Menu -->
+<section class="food-menu">
+    <div class="container">
+        <h2 class="text-center">Popular Items</h2>
+
+        {% for item in popular_items %}
+        <div class="food-menu-box" onclick="viewProduct('{{ item.name }}', '{{ item.image }}', '{{ item.price }}', '{{ item.category }}', '{{ item.description }}')">
+            <div class="food-menu-img">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="img-responsive img-curve">
+                {% else %}
+                    <img src="{% static 'images/no-image.png' %}" alt="No image available" class="img-responsive img-curve">
+                {% endif %}
+            </div>
+            <div class="food-menu-desc">
+                <h4>{{ item.name }}</h4>
+                <p class="food-price">৳{{ item.price }}</p>
+                <p class="food-detail">{{ item.description }}</p>
+                <a href="{% url 'home:order' %}?name={{ item.name|urlencode }}&image={{ item.image|urlencode }}&price={{ item.price }}&category={{ item.category|urlencode }}" 
+                   class="btn btn-primary" 
+                   onclick="event.stopPropagation()">Order Now</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="clearfix"></div>
+    </div>
+
+    <p class="text-center">
+        <a href="{% url 'home:items' %}">See All Items</a>
+    </p>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Carousel functionality
+    let currentSlideIndex = 0;
+    var slides = document.querySelectorAll('.carousel-slide');
+    var indicators = document.querySelectorAll('.indicator');
+    var totalSlides = slides.length;
+    var autoPlayTimer = null;
+    var searchFocused = false;
+
+    function showSlide(index) {
+        slides.forEach(function(slide) {
+            slide.classList.remove('active');
+            var title = slide.querySelector('.carousel-title');
+            var subtitle = slide.querySelector('.carousel-subtitle');
+            if (title) {
+                title.style.animation = 'none';
+                title.style.opacity = '0';
+                title.style.transform = 'translateY(-50px)';
+            }
+            if (subtitle) {
+                subtitle.style.animation = 'none';
+                subtitle.style.opacity = '0';
+                subtitle.style.transform = 'translateY(50px)';
+            }
+        });
+        indicators.forEach(function(ind) { ind.classList.remove('active'); });
+
+        if (index >= totalSlides) {
+            currentSlideIndex = 0;
+        } else if (index < 0) {
+            currentSlideIndex = totalSlides - 1;
+        } else {
+            currentSlideIndex = index;
+        }
+
+        var activeSlide = slides[currentSlideIndex];
+        void activeSlide.offsetWidth;
+        activeSlide.classList.add('active');
+        indicators[currentSlideIndex].classList.add('active');
+
+        setTimeout(function() {
+            var title = activeSlide.querySelector('.carousel-title');
+            var subtitle = activeSlide.querySelector('.carousel-subtitle');
+            if (title) {
+                title.style.animation = 'slideInDown 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both';
+            }
+            if (subtitle) {
+                subtitle.style.animation = 'slideInUp 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s both';
+            }
+        }, 50);
+    }
+
+    function changeSlide(direction) {
+        showSlide(currentSlideIndex + direction);
+    }
+
+    function currentSlide(index) {
+        showSlide(index - 1);
+    }
+
+    function startAutoPlay() {
+        stopAutoPlay();
+        autoPlayTimer = setInterval(function() {
+            if (!searchFocused) changeSlide(1);
+        }, 5000);
+    }
+
+    function stopAutoPlay() {
+        if (autoPlayTimer) clearInterval(autoPlayTimer);
+    }
+
+    // Pause auto-play while user is typing in search
+    var searchInput = document.querySelector('.hero-search-input');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            searchFocused = true;
+        });
+        searchInput.addEventListener('blur', function() {
+            searchFocused = false;
+        });
+    }
+
+    // Quick search tags
+    document.querySelectorAll('.search-tag').forEach(function(tag) {
+        tag.addEventListener('click', function() {
+            var query = this.getAttribute('data-query');
+            if (searchInput) {
+                searchInput.value = query;
+                searchInput.closest('form').submit();
+            }
+        });
+    });
+
+    startAutoPlay();
+    showSlide(0);
+
+    function viewProduct(name, image, price, category, description) {
+    window.location.href = "{% url 'home:product_detail_query' %}?name=" + encodeURIComponent(name) + 
+                          "&image=" + encodeURIComponent(image) + 
+                          "&price=" + encodeURIComponent(price) + 
+                          "&category=" + encodeURIComponent(category) +
+                          "&description=" + encodeURIComponent(description);
+}
+</script>
+{% endblock %}

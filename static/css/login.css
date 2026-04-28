@@ -1,0 +1,955 @@
+/* Login Page Specific Styles with Animations */
+
+.login-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+    z-index: 10;
+    margin-top: 20px;
+}
+
+/* Animated Background Elements */
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(33, 136, 56, 0.1) 100%);
+    animation: float 20s infinite ease-in-out;
+    pointer-events: none;
+    filter: blur(60px);
+}
+
+.circle-1 {
+    width: 400px;
+    height: 400px;
+    top: -200px;
+    left: -200px;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(52, 168, 83, 0.15) 100%);
+}
+
+.circle-2 {
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    right: -150px;
+    animation-duration: 15s;
+    animation-delay: 2s;
+    background: linear-gradient(135deg, rgba(33, 136, 56, 0.18) 0%, rgba(40, 167, 69, 0.12) 100%);
+}
+
+.circle-3 {
+    width: 350px;
+    height: 350px;
+    bottom: -150px;
+    left: 30%;
+    animation-duration: 25s;
+    animation-delay: 4s;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(52, 168, 83, 0.1) 100%);
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+        transform: translate(30px, -40px) scale(1.1) rotate(90deg);
+    }
+    50% {
+        transform: translate(-30px, 30px) scale(0.9) rotate(180deg);
+    }
+    75% {
+        transform: translate(50px, 20px) scale(1.05) rotate(270deg);
+    }
+}
+
+/* Additional Decorative Elements */
+.animated-bg::before,
+.animated-bg::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.animated-bg::before {
+    width: 250px;
+    height: 250px;
+    top: 20%;
+    left: 10%;
+    background: radial-gradient(circle, rgba(52, 168, 83, 0.25) 0%, transparent 70%);
+    animation: pulse 6s infinite ease-in-out;
+}
+
+.animated-bg::after {
+    width: 300px;
+    height: 300px;
+    bottom: 15%;
+    right: 15%;
+    background: radial-gradient(circle, rgba(40, 167, 69, 0.2) 0%, transparent 70%);
+    animation: pulse 8s infinite ease-in-out 2s;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* Floating Food Icons */
+.floating-icon {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.25;
+    pointer-events: none;
+    animation: floatUpDown 8s infinite ease-in-out;
+    filter: drop-shadow(0 4px 12px rgba(40, 167, 69, 0.4));
+}
+
+@keyframes floatUpDown {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.25;
+    }
+    25% {
+        transform: translateY(-30px) rotate(5deg);
+        opacity: 0.35;
+    }
+    50% {
+        transform: translateY(-60px) rotate(-5deg);
+        opacity: 0.25;
+    }
+    75% {
+        transform: translateY(-30px) rotate(3deg);
+        opacity: 0.35;
+    }
+}
+
+/* Decorative Geometric Shapes */
+.shape {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.12;
+}
+
+.shape-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    right: 25%;
+    background: linear-gradient(135deg, #28a745, #218838);
+    border-radius: 20px;
+    animation: rotate3d 15s infinite linear;
+}
+
+.shape-2 {
+    width: 60px;
+    height: 60px;
+    bottom: 25%;
+    left: 20%;
+    background: linear-gradient(135deg, #52c234, #34a853);
+    border-radius: 50%;
+    animation: rotate3d 20s infinite linear reverse;
+}
+
+.shape-3 {
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 8%;
+    background: linear-gradient(135deg, #34a853, #28a745);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    animation: rotate3d 25s infinite linear;
+}
+
+.shape-4 {
+    width: 70px;
+    height: 70px;
+    top: 35%;
+    right: 10%;
+    background: linear-gradient(135deg, #66bb6a, #81c784);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: morph 12s infinite ease-in-out;
+}
+
+@keyframes rotate3d {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes morph {
+    0%, 100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        transform: rotate(0deg);
+    }
+    25% {
+        border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+        transform: rotate(90deg);
+    }
+    50% {
+        border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+        transform: rotate(180deg);
+    }
+    75% {
+        border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+        transform: rotate(270deg);
+    }
+}
+
+/* Login Box */
+.login-box {
+    background: white;
+    border-radius: 30px;
+    padding: 35px 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: slideInUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Login Header */
+.login-header {
+    text-align: center;
+    margin-bottom: 25px;
+    animation: fadeInDown 0.8s ease 0.2s both;
+}
+
+.avatar {
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 18px;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+    animation: bounceIn 1s ease 0.3s both;
+}
+
+.avatar svg {
+    width: 45px;
+    height: 45px;
+    color: white;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.login-header h2 {
+    font-size: 1.8rem;
+    color: #2f3542;
+    margin-bottom: 8px;
+}
+
+.login-header h2::after {
+    display: none;
+}
+
+.login-header p {
+    color: #747d8c;
+    font-size: 0.95rem;
+}
+
+/* Form Styles */
+.login-form {
+    animation: fadeIn 0.8s ease 0.4s both;
+}
+
+.form-group {
+    margin-bottom: 18px;
+    position: relative;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #2f3542;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.form-label svg {
+    color: #28a745;
+    transition: all 0.3s ease;
+}
+
+.form-group:focus-within .form-label {
+    color: #28a745;
+}
+
+.form-group:focus-within .form-label svg {
+    transform: scale(1.1);
+}
+
+.form-input {
+    width: 100%;
+    padding: 13px 18px;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    outline: none;
+    background: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-input:focus {
+    border-color: #28a745;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input::placeholder {
+    color: #a0a8b0;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus::placeholder {
+    transform: translateX(5px);
+    opacity: 0.7;
+}
+
+/* Password Wrapper */
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #747d8c;
+    transition: all 0.3s ease;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password:hover {
+    color: #28a745;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.toggle-password svg {
+    pointer-events: none;
+}
+
+/* Form Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    font-size: 0.88rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    color: #57606f;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label:hover {
+    color: #2f3542;
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d1d8e0;
+    border-radius: 5px;
+    margin-right: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ .checkmark {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    border-color: #28a745;
+    animation: checkboxPop 0.3s ease;
+}
+
+@keyframes checkboxPop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    animation: checkFadeIn 0.3s ease 0.1s both;
+}
+
+@keyframes checkFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.forgot-password {
+    color: #28a745;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #218838;
+    text-decoration: underline;
+}
+
+/* Login Button */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.btn-login .btn-text {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-login .btn-loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.btn-login.loading {
+    pointer-events: none;
+}
+
+/* Divider */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d1d8e0, transparent);
+}
+
+.divider span {
+    background: white;
+    padding: 0 15px;
+    color: #747d8c;
+    position: relative;
+    z-index: 1;
+    font-size: 0.9rem;
+}
+
+/* Social Login Buttons */
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease 0.6s both;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    background: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #2f3542;
+}
+
+.social-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.google-btn:hover {
+    border-color: #4285f4;
+    background: #4285f4;
+    color: white;
+}
+
+.facebook-btn:hover {
+    border-color: #1877f2;
+    background: #1877f2;
+    color: white;
+}
+
+/* Signup Link */
+.signup-link {
+    text-align: center;
+    color: #747d8c;
+    font-size: 0.9rem;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e8ed;
+    animation: fadeIn 0.8s ease 0.6s both;
+}
+
+.signup-link a {
+    color: #28a745;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.signup-link a:hover {
+    color: #218838;
+    text-decoration: underline;
+}
+
+/* Success Message */
+.success-message {
+    display: none;
+    text-align: center;
+    background: white;
+    border-radius: 30px;
+    padding: 50px 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+.success-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #52c234 0%, #34a853 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: successPulse 1.5s ease infinite;
+}
+
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(82, 194, 52, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 20px rgba(82, 194, 52, 0);
+    }
+}
+
+.success-icon svg {
+    width: 60px;
+    height: 60px;
+    color: white;
+    stroke-width: 3;
+    animation: checkDraw 0.8s ease;
+}
+
+@keyframes checkDraw {
+    from {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+    }
+    to {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 0;
+    }
+}
+
+.success-message h3 {
+    font-size: 1.8rem;
+    color: #2f3542;
+    margin-bottom: 15px;
+}
+
+.success-message p {
+    color: #747d8c;
+    font-size: 1rem;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #52c234 0%, #34a853 100%);
+    color: white;
+    padding: 18px 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 10000;
+    transform: translateX(400px);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-icon {
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.toast-message {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 768px) {
+    .login-section {
+        height: 100vh;
+        padding: 0 15px;
+        overflow: hidden;
+    }
+
+    .login-container {
+        padding: 0;
+        margin-top: -20px;
+    }
+
+    .login-box {
+        padding: 25px 20px;
+        border-radius: 25px;
+        width: 100%;
+    }
+
+    .login-header {
+        margin-bottom: 20px;
+    }
+
+    .login-header h2 {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+    }
+
+    .avatar {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 15px;
+    }
+
+    .avatar svg {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-input {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-login {
+        padding: 13px;
+        font-size: 0.95rem;
+    }
+    
+    .signup-link {
+        margin-top: 18px;
+        padding-top: 18px;
+        font-size: 0.85rem;
+    }
+
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .social-login {
+        gap: 12px;
+    }
+
+    .social-btn {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+
+    .toast {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        padding: 15px 20px;
+    }
+
+    .circle-1 {
+        width: 180px;
+        height: 180px;
+        top: -140px;
+        left: -140px;
+    }
+
+    .circle-2 {
+        width: 130px;
+        height: 130px;
+        right: -100px;
+    }
+
+    .circle-3 {
+        width: 90px;
+        height: 90px;
+        bottom: -70px;
+    }
+    
+    .floating-icon {
+        font-size: 2.2rem;
+        opacity: 0.2;
+    }
+    
+    .shape {
+        opacity: 0.08;
+    }
+    
+    .shape-1 {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .shape-2 {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .shape-3 {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .shape-4 {
+        width: 50px;
+        height: 50px;
+    }
+
+    .success-message {
+        padding: 40px 25px;
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
+    }
+
+    .success-icon svg {
+        width: 50px;
+        height: 50px;
+    }
+
+    .success-message h3 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Additional Input Animations */
+@keyframes inputShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+.form-input.error {
+    border-color: #218838;
+    animation: inputShake 0.5s ease;
+}
+
+.form-input.error:focus {
+    box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.1);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(40, 167, 69, 0.2);
+    border-top-color: #28a745;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+

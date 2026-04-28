@@ -1,0 +1,684 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Grocery Store - Checkout{% endblock %}
+
+{% block content %}
+<section class="checkout-section">
+  <div class="container">
+    <h2 class="text-center">Checkout</h2>
+
+    <div class="checkout-container">
+      <div class="checkout-form-section">
+        <h3>Delivery Information</h3>
+        
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+        
+        <form method="POST" class="checkout-form" action="{% url 'home:checkout_cart' %}">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label for="{{ form.customer_name.id_for_label }}">Full Name *</label>
+            {{ form.customer_name }}
+            {% if form.customer_name.errors %}
+              <div class="error-message">{{ form.customer_name.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="{{ form.email.id_for_label }}">Email *</label>
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="error-message">{{ form.email.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.phone_number.id_for_label }}">Phone Number *</label>
+              {{ form.phone_number }}
+              {% if form.phone_number.errors %}
+                <div class="error-message">{{ form.phone_number.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.address.id_for_label }}">Delivery Address *</label>
+            {{ form.address }}
+            {% if form.address.errors %}
+              <div class="error-message">{{ form.address.errors }}</div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn-submit-order">
+            <i class="fas fa-check"></i> Place Order
+          </button>
+        </form>
+      </div>
+
+      <div class="order-summary-section">
+        <h3>Order Summary</h3>
+        <div class="order-items">
+          {% for item in cart_items %}
+            <div class="order-item">
+              <div class="order-item-image">
+                {% if item.food.image %}
+                  <img src="{{ item.food.image.url }}" alt="{{ item.food.name }}">
+                {% else %}
+                  <img src="{% static 'home/images/menu-pizza.jpg' %}" alt="{{ item.food.name }}">
+                {% endif %}
+              </div>
+              <div class="order-item-info">
+                <h4>{{ item.food.name }}</h4>
+                <p>Qty: {{ item.quantity }} × ৳{{ item.price }}</p>
+              </div>
+              <div class="order-item-price">
+                ৳{{ item.subtotal|floatformat:2 }}
+              </div>
+            </div>
+          {% empty %}
+            <div class="empty-cart-message">
+              <p>Your cart is empty.</p>
+              <a href="{% url 'home:items' %}" class="btn-home-now">home Now</a>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="order-total">
+          <div class="total-row">
+            <span>Total:</span>
+            <span class="total-amount">৳{{ total|floatformat:2 }}</span>
+          </div>
+        </div>
+
+        <a href="{% url 'home:view_cart' %}" class="btn-back-cart">
+          <i class="fas fa-arrow-left"></i> Back to Cart
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .checkout-section {
+    padding: 60px 0;
+    min-height: 80vh;
+    background: linear-gradient(135deg, #f0f7f0 0%, #d4edda 100%);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  h2.text-center {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 15px;
+  }
+
+  h2.text-center:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(135deg, #28a745, #34ce57);
+    border-radius: 4px;
+  }
+
+  .checkout-container {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 30px;
+  }
+
+  .checkout-form-section,
+  .order-summary-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(40, 167, 69, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .checkout-form-section:hover,
+  .order-summary-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.25);
+  }
+
+  .checkout-form-section h3,
+  .order-summary-section h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e8f5e9;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e8f5e9;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .error-message {
+    color: #dc3545;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
+  .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+  }
+
+  .alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .btn-submit-order {
+    width: 100%;
+    background: linear-gradient(135deg, #28a745, #34ce57);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit-order::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+
+  .btn-submit-order:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .btn-submit-order:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  }
+
+  .btn-submit-order:active {
+    transform: translateY(0);
+  }
+
+  .order-items {
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+
+  .order-items::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .order-items::-webkit-scrollbar-track {
+    background: #e8f5e9;
+    border-radius: 10px;
+  }
+
+  .order-items::-webkit-scrollbar-thumb {
+    background: #28a745;
+    border-radius: 10px;
+  }
+
+  .order-items::-webkit-scrollbar-thumb:hover {
+    background: #34ce57;
+  }
+
+  .order-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #e8f5e9;
+    animation: fadeIn 0.5s ease;
+    animation-fill-mode: both;
+  }
+
+  .order-item:nth-child(1) { animation-delay: 0.1s; }
+  .order-item:nth-child(2) { animation-delay: 0.2s; }
+  .order-item:nth-child(3) { animation-delay: 0.3s; }
+  .order-item:nth-child(4) { animation-delay: 0.4s; }
+  .order-item:nth-child(5) { animation-delay: 0.5s; }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .order-item:last-child {
+    border-bottom: none;
+  }
+
+  .order-item-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid #e8f5e9;
+  }
+
+  .order-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .order-item:hover .order-item-image img {
+    transform: scale(1.1);
+  }
+
+  .order-item-info {
+    flex: 1;
+  }
+
+  .order-item-info h4 {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  .order-item-info p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .order-item-price {
+    color: #28a745;
+    font-size: 1.2rem;
+    font-weight: 700;
+    align-self: center;
+  }
+
+  .order-total {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #e8f5e9;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    color: #2c3e50;
+    font-weight: 600;
+  }
+
+  .total-amount {
+    font-size: 1.8rem;
+    color: #28a745;
+    font-weight: 700;
+  }
+
+  .btn-back-cart {
+    display: block;
+    width: 100%;
+    background: white;
+    color: #28a745;
+    padding: 12px 30px;
+    border: 2px solid #28a745;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-back-cart:hover {
+    background: #28a745;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  .btn-back-cart:active {
+    transform: translateY(0);
+  }
+
+  .empty-cart-message {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .empty-cart-message p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+
+  .btn-home-now {
+    display: inline-block;
+    padding: 10px 25px;
+    background: linear-gradient(135deg, #28a745, #34ce57);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-home-now:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  /* Field validation styles */
+  .field-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    animation: slideDown 0.3s ease;
+  }
+
+  .form-group input:invalid,
+  .form-group textarea:invalid {
+    border-color: #dc3545;
+  }
+
+  /* Add some green decorative elements */
+  .checkout-form-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(135deg, #28a745, #34ce57);
+    border-radius: 15px 15px 0 0;
+  }
+
+  .checkout-form-section,
+  .order-summary-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .checkout-form-section::after,
+  .order-summary-section::after {
+    content: '🥦';
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    font-size: 100px;
+    opacity: 0.03;
+    transform: rotate(15deg);
+    pointer-events: none;
+  }
+
+  .order-summary-section::after {
+    content: '🛒';
+  }
+
+  @media (max-width: 968px) {
+    .checkout-container {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .checkout-section {
+      padding: 40px 0;
+    }
+
+    h2.text-center {
+      font-size: 2rem;
+    }
+
+    .checkout-form-section,
+    .order-summary-section {
+      padding: 20px;
+    }
+
+    .order-item {
+      gap: 10px;
+    }
+
+    .order-item-image {
+      width: 60px;
+      height: 60px;
+    }
+
+    .order-item-info h4 {
+      font-size: 1rem;
+    }
+
+    .order-item-price {
+      font-size: 1rem;
+    }
+
+    .total-row {
+      font-size: 1.1rem;
+    }
+
+    .total-amount {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h2.text-center {
+      font-size: 1.8rem;
+    }
+
+    .order-item {
+      flex-wrap: wrap;
+    }
+
+    .order-item-price {
+      width: 100%;
+      text-align: right;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Form validation
+  document.querySelector('.checkout-form').addEventListener('submit', function(e) {
+    const requiredFields = this.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        isValid = false;
+        field.style.borderColor = '#e74c3c';
+        
+        // Add error message if not exists
+        let errorMsg = field.parentNode.querySelector('.field-error');
+        if (!errorMsg) {
+          errorMsg = document.createElement('div');
+          errorMsg.className = 'field-error error-message';
+          errorMsg.textContent = 'This field is required';
+          field.parentNode.appendChild(errorMsg);
+        }
+      } else {
+        field.style.borderColor = '#ddd';
+        const errorMsg = field.parentNode.querySelector('.field-error');
+        if (errorMsg) {
+          errorMsg.remove();
+        }
+      }
+    });
+    
+    // Email validation
+    const emailField = document.getElementById('{{ form.email.id_for_label }}');
+    if (emailField && emailField.value) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailField.value)) {
+        isValid = false;
+        emailField.style.borderColor = '#e74c3c';
+        
+        let errorMsg = emailField.parentNode.querySelector('.field-error');
+        if (!errorMsg) {
+          errorMsg = document.createElement('div');
+          errorMsg.className = 'field-error error-message';
+          errorMsg.textContent = 'Please enter a valid email address';
+          emailField.parentNode.appendChild(errorMsg);
+        }
+      }
+    }
+    
+    // Phone validation (basic)
+    const phoneField = document.getElementById('{{ form.phone_number.id_for_label }}');
+    if (phoneField && phoneField.value) {
+      const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+      if (!phoneRegex.test(phoneField.value)) {
+        isValid = false;
+        phoneField.style.borderColor = '#e74c3c';
+        
+        let errorMsg = phoneField.parentNode.querySelector('.field-error');
+        if (!errorMsg) {
+          errorMsg = document.createElement('div');
+          errorMsg.className = 'field-error error-message';
+          errorMsg.textContent = 'Please enter a valid phone number';
+          phoneField.parentNode.appendChild(errorMsg);
+        }
+      }
+    }
+    
+    if (!isValid) {
+      e.preventDefault();
+      
+      // Scroll to first error
+      const firstError = document.querySelector('.field-error');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
+
+  // Real-time validation
+  document.querySelectorAll('.form-group input, .form-group textarea').forEach(field => {
+    field.addEventListener('input', function() {
+      this.style.borderColor = '#ddd';
+      const errorMsg = this.parentNode.querySelector('.field-error');
+      if (errorMsg) {
+        errorMsg.remove();
+      }
+    });
+  });
+
+  // Auto-fill for logged-in users
+  {% if user.is_authenticated %}
+    const nameField = document.getElementById('{{ form.customer_name.id_for_label }}');
+    const emailField = document.getElementById('{{ form.email.id_for_label }}');
+    
+    if (nameField && !nameField.value) {
+      nameField.value = "{{ user.get_full_name|default:'' }}";
+    }
+    
+    if (emailField && !emailField.value) {
+      emailField.value = "{{ user.email|default:'' }}";
+    }
+  {% endif %}
+</script>
+{% endblock %}

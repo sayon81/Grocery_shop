@@ -1,0 +1,381 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Grocery Store - {{ category.name }} Items{% endblock %}
+
+{% block extra_css %}
+<style>
+    .food-search {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        padding: 60px 0;
+        margin-bottom: 40px;
+    }
+
+    .food-search h2 {
+        font-size: 2.5rem;
+        margin: 0;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .food-search h2 a {
+        color: #ffc107;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .food-search h2 a:hover {
+        color: #ffca2c;
+        text-decoration: underline;
+    }
+
+    .food-menu {
+        padding: 40px 0;
+    }
+
+    .food-menu h2 {
+        color: #333;
+        margin-bottom: 40px;
+        font-size: 2rem;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+
+    .food-menu h2:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(90deg, #28a745, #20c997);
+        border-radius: 3px;
+    }
+
+    /* Responsive grid */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+
+    @media (max-width: 968px) {
+        .products-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 580px) {
+        .products-grid { grid-template-columns: 1fr; }
+    }
+
+    .food-menu-box {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-radius: 15px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        margin-bottom: 0;
+        position: relative;
+        width: auto !important;
+        float: none !important;
+        padding: 0 !important;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .food-menu-box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(40, 167, 69, 0.2);
+    }
+
+    .food-menu-img {
+        overflow: hidden;
+        height: 220px;
+        position: relative;
+    }
+
+    .food-menu-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .food-menu-box:hover .food-menu-img img {
+        transform: scale(1.05);
+    }
+
+    .food-menu-desc {
+        padding: 15px 18px 18px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        text-align: center;
+    }
+
+    .food-menu-desc h4 {
+        color: #333;
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .food-price {
+        color: #28a745;
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .food-detail {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    /* Action row */
+    .food-menu-actions {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+        justify-content: center;
+        margin-top: auto;
+        padding-top: 8px;
+    }
+
+    .food-menu-actions .add-to-cart-form {
+        flex: 1;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        padding: 10px 12px;
+        border-radius: 50px;
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        flex: 1;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        min-width: 0;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #20c997, #28a745);
+        transform: scale(1.03);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        color: white;
+    }
+
+    .btn-add-cart {
+        flex: 1;
+        background: white;
+        border: 2px solid #28a745;
+        padding: 10px 12px;
+        border-radius: 50px;
+        color: #28a745;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-family: inherit;
+        white-space: nowrap;
+    }
+
+    .btn-add-cart:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-add-cart.added {
+        background: #28a745;
+        color: white;
+        border-color: #28a745;
+    }
+
+    .btn-add-cart:disabled {
+        opacity: 0.75;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 580px) {
+        .food-menu-actions {
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
+
+    /* Toast notification */
+    .cart-toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        z-index: 10001;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transition: opacity 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+        .food-search h2 {
+            font-size: 1.8rem;
+        }
+
+        .food-menu h2 {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Grocery Search Section Starts Here -->
+<section class="food-search text-center">
+    <div class="container">
+        <h2>
+            Items in
+            <a href="{% url 'home:category_items' category.slug %}" class="text-white">
+                "{{ category.name }}"
+            </a>
+        </h2>
+    </div>
+</section>
+<!-- Grocery Search Section Ends Here -->
+
+<!-- Grocery Menu Section Starts Here -->
+<section class="food-menu">
+    <div class="container">
+        <h2 class="text-center" id="categoryTitle">{{ category.name }} Items</h2>
+
+        {% if items %}
+        <div class="products-grid">
+            {% for item in items %}
+            <div class="food-menu-box" onclick="viewProduct('{{ item.name|escapejs }}', '{% if item.image %}{{ item.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}', '{{ item.price }}', '{{ item.category.name|escapejs }}', '{{ item.description|escapejs }}')">
+                <div class="food-menu-img">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="img-responsive img-curve">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.jpg' %}" alt="{{ item.name }}" class="img-responsive img-curve">
+                    {% endif %}
+                </div>
+                <div class="food-menu-desc">
+                    <h4>{{ item.name }}</h4>
+                    <p class="food-price">৳{{ item.price }}</p>
+                    <p class="food-detail">{{ item.description|truncatechars:100 }}</p>
+                    <div class="food-menu-actions" onclick="event.stopPropagation()">
+                        <a href="{% url 'home:order' %}?name={{ item.name|urlencode }}&image={% if item.image %}{{ item.image.url|urlencode }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}&price={{ item.price }}&category={{ item.category.name|urlencode }}&description={{ item.description|urlencode }}"
+                           class="btn btn-primary">Order Now</a>
+                        <form method="POST" action="{% url 'home:add_to_cart' item.id %}" class="add-to-cart-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-add-cart">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center">
+            <p style="font-size: 1.2rem; color: #666; padding: 40px;">
+                No items available in this category at the moment.
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="clearfix"></div>
+    </div>
+</section>
+<!-- Grocery Menu Section Ends Here -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showNotification(message, type) {
+        type = type || 'success';
+        var toast = document.createElement('div');
+        toast.className = 'cart-toast';
+        toast.style.background = type === 'error' ? '#dc3545' : '#28a745';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(function() {
+            toast.style.opacity = '0';
+            setTimeout(function() { toast.remove(); }, 300);
+        }, 3000);
+    }
+
+    function viewProduct(name, image, price, category, description) {
+        window.location.href = "{% url 'home:product_detail_query' %}?name=" + encodeURIComponent(name) +
+                              "&image=" + encodeURIComponent(image) +
+                              "&price=" + encodeURIComponent(price) +
+                              "&category=" + encodeURIComponent(category) +
+                              "&description=" + encodeURIComponent(description);
+    }
+
+    document.querySelectorAll('.add-to-cart-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var btn = this.querySelector('.btn-add-cart');
+            var originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            btn.disabled = true;
+
+            var formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    btn.classList.add('added');
+                    showNotification(data.message || 'Added to cart!');
+                    setTimeout(function() {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('added');
+                        btn.disabled = false;
+                    }, 2000);
+                } else {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                    showNotification(data.error || 'Error adding to cart', 'error');
+                }
+            })
+            .catch(function(err) {
+                console.error(err);
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                showNotification('Error adding to cart', 'error');
+            });
+        });
+    });
+</script>
+{% endblock %}

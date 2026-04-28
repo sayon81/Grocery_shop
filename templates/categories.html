@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Grocery Store - Categories{% endblock %}
+
+{% block content %}
+<!-- Categories Section Starts Here -->
+<section class="categories">
+    <div class="container">
+        <h2 class="text-center">Explore Categories</h2>
+
+        {% for category in categories %}
+        <a href="{% url 'home:category_items' category.slug %}">
+            <div class="box-3 float-container">
+                {% if category.image %}
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-responsive img-curve">
+                {% else %}
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="{{ category.name }}" class="img-responsive img-curve">
+                {% endif %}
+                <h3 class="float-text text-white">{{ category.name }}</h3>
+            </div>
+        </a>
+        {% empty %}
+        <div class="text-center">
+            <p>No categories available at the moment.</p>
+        </div>
+        {% endfor %}
+
+        <div class="clearfix"></div>
+    </div>
+</section>
+<!-- Categories Section Ends Here -->
+{% endblock %}
