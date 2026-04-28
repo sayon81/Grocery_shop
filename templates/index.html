@@ -272,6 +272,52 @@
         color: white;
         transform: translateY(-1px);
     }
+    .food-menu-actions .add-to-cart-form {
+        flex: 1;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+    
+    .btn-add-cart {
+        flex: 1;
+        background: white;
+        border: 2px solid #28a745;
+        padding: 10px 12px;
+        border-radius: 50px;
+        color: #28a745;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-family: inherit;
+        white-space: nowrap;
+    }
+    
+    .btn-add-cart:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-add-cart.added {
+        background: #28a745;
+        color: white;
+        border-color: #28a745;
+    }
+
+    @media (max-width: 580px) {
+        .food-menu-actions {
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
 
     /* Carousel Controls */
     .carousel-btn {
