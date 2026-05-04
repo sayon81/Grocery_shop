@@ -209,7 +209,7 @@
     .my-orders {
         padding: 80px 0;
         background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        min-height: 100vh;
+        min-height: calc(100vh - 160px);
         position: relative;
     }
 
@@ -988,7 +988,8 @@
 </style>
 {% endblock %}
 
-{% block content %}  
+{% block content %}
+<section class="my-orders">
     <div class="container">
         {% if orders %}
             <!-- Filter Bar -->
@@ -1273,19 +1274,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add number counting animation for totals
     const totalAmounts = document.querySelectorAll('.total-amount');
     totalAmounts.forEach(amount => {
-        const finalValue = parseFloat(amount.textContent);
+        const rawText = amount.textContent.replace(/[^0-9.]/g, '');
+        const finalValue = parseFloat(rawText);
+        if (isNaN(finalValue)) return;
+
         let currentValue = 0;
         const increment = finalValue / 20;
-        const duration = 800;
-        const stepTime = duration / 20;
-        
+        const stepTime = 800 / 20;
+
         const timer = setInterval(() => {
             currentValue += increment;
             if (currentValue >= finalValue) {
-                amount.textContent = finalValue.toFixed(2);
+                amount.textContent = '৳' + finalValue.toFixed(2);
                 clearInterval(timer);
             } else {
-                amount.textContent = currentValue.toFixed(2);
+                amount.textContent = '৳' + currentValue.toFixed(2);
             }
         }, stepTime);
     });

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import  path
 from . import views
 
 app_name = 'home'
@@ -55,4 +55,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('profile/update/', views.update_profile, name='update_profile'),
     path('address/update/', views.update_address, name='update_address'),
+
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    path('resend-activation/', views.resend_activation, name='resend_activation'),
 ]

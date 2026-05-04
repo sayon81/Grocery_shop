@@ -69,9 +69,11 @@
                     <li>
                         <a href="{% url 'home:contact' %}">Contact</a>
                     </li>
+                    {% if user.is_authenticated %}
                     <li>
                         <a href="{% url 'home:order_list' %}">My Orders</a>
                     </li>
+                    {% endif %}
                     
                     <li>
                         <a href="{% url 'home:view_cart' %}">Cart</a>

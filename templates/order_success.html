@@ -715,14 +715,18 @@
                     <div class="order-item">
                         <div class="item-info">
                             <div class="item-icon">
-                                <i class="fas {% if item.food.category.name == 'Vegetables' %}fa-carrot{% elif item.food.category.name == 'Fruits' %}fa-apple-alt{% elif item.food.category.name == 'Dairy' %}fa-cheese{% else %}fa-homeping-basket{% endif %}"></i>
+                                {% if item.item and item.item.category %}
+                                <i class="fas {% if item.item.category.name == 'Vegetables' %}fa-carrot{% elif item.item.category.name == 'Fruits' %}fa-apple-alt{% elif item.item.category.name == 'Dairy' %}fa-cheese{% else %}fa-shopping-basket{% endif %}"></i>
+                                {% else %}
+                                <i class="fas fa-shopping-basket"></i>
+                                {% endif %}
                             </div>
                             <div class="item-details">
-                                <span class="item-name">{{ item.food.name }}</span>
-                                <span class="item-quantity">Qty: {{ item.quantity }} × ${{ item.price }}</span>
+                                <span class="item-name">{% if item.item %}{{ item.item.name }}{% else %}{{ item.product_name }}{% endif %}</span>
+                                <span class="item-quantity">Qty: {{ item.quantity }} × ৳{{ item.price }}</span>
                             </div>
                         </div>
-                        <span class="item-price">${{ item.subtotal|floatformat:2 }}</span>
+                        <span class="item-price">৳{{ item.subtotal|floatformat:2 }}</span>
                     </div>
                     {% endfor %}
                 </div>

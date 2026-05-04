@@ -149,3 +149,18 @@ SESSION_COOKIE_AGE = 1209600 # 2 weeks in seconds (default)
 LOGIN_URL = '/login/'  # This tells Django where to redirect for login
 LOGIN_REDIRECT_URL = '/'  # Where to go after successful login
 LOGOUT_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'swiftmartswiftmart@gmail.com'
+EMAIL_HOST_PASSWORD = 'dfpj kduc xppp dssu'  # Not your real password
+DEFAULT_FROM_EMAIL = 'SwiftMart <swiftmartswiftmart@gmail.com>'
+
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]

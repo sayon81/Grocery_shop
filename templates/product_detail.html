@@ -512,20 +512,18 @@
     console.log("Total (subtotal):", productPrice * quantity);
     console.log("="*50);
     
+    const orderUrl = "{% url 'home:order' %}?name=" + encodeURIComponent(productName) +
+                    "&image=" + encodeURIComponent(productImage) +
+                    "&price=" + encodeURIComponent(productPrice) +
+                    "&category=" + encodeURIComponent(productCategory) +
+                    "&description=" + encodeURIComponent(productDescription) +
+                    "&quantity=" + quantity +
+                    "&unit=" + encodeURIComponent(unit);
+    
     {% if user.is_authenticated %}
-        // User is logged in - go directly to payment with the selected quantity
-        window.location.href = "{% url 'home:payment' %}?name=" + encodeURIComponent(productName) + 
-                            "&price=" + encodeURIComponent(productPrice) +
-                            "&quantity=" + quantity +
-                            "&unit=" + encodeURIComponent(unit);
+        window.location.href = orderUrl;
     {% else %}
-        // Redirect to login if not authenticated
-        window.location.href = "{% url 'home:login' %}?next=" + encodeURIComponent(
-            "{% url 'home:payment' %}?name=" + encodeURIComponent(productName) + 
-            "&price=" + encodeURIComponent(productPrice) +
-            "&quantity=" + quantity +
-            "&unit=" + encodeURIComponent(unit)
-        );
+        window.location.href = "{% url 'home:login' %}?next=" + encodeURIComponent(orderUrl);
     {% endif %}
     }
 

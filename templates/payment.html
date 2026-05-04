@@ -579,7 +579,14 @@
                     <input type="hidden" name="order_id" value="{{ order.order_number }}" id="orderId">
                     <input type="hidden" name="product_name" value="{{ order.product_name }}" id="productName">
                     <input type="hidden" name="quantity" value="{{ order.quantity }}" id="productQuantity">
+                    <input type="hidden" name="unit_price" value="{{ order.price }}" id="unitPrice">
+                    <input type="hidden" name="subtotal" value="{{ order.subtotal }}" id="subtotalAmount">
+                    <input type="hidden" name="delivery_fee" value="{{ order.delivery_charge }}" id="deliveryFee">
                     <input type="hidden" name="total_amount" value="{{ order.total }}" id="totalAmount">
+                    <input type="hidden" name="customer_name" value="{{ pending_customer_name }}" id="customerName">
+                    <input type="hidden" name="email" value="{{ pending_email }}" id="customerEmail">
+                    <input type="hidden" name="phone_number" value="{{ pending_phone }}" id="customerPhone">
+                    <input type="hidden" name="address" value="{{ pending_address }}" id="customerAddress">
                     
                     <div class="payment-methods-grid">
                         <!-- Cash on Delivery -->
@@ -723,10 +730,11 @@
             <i class="fas fa-check"></i>
         </div>
         <h2>Payment Successful!</h2>
-        <p>Your order has been confirmed. We'll send you a confirmation email shortly.</p>
+        <p id="successMessage">Your order has been confirmed.</p>
         <p style="font-size: 0.9rem; color: #28a745; font-weight: 600; margin-top: 10px;">
             Order ID: <span id="orderIdDisplay"></span>
         </p>
+        <p id="emailStatus" style="font-size: 0.9rem; margin-top: 8px; display: none;"></p>
         <a href="{% url 'home:index' %}" class="btn btn-primary" style="margin-top: 20px;">Continue Shopping</a>
     </div>
 </div>
@@ -747,7 +755,7 @@
     // PRIORITIZE URL PARAMETERS over Django context
     // Only use Django context as fallback if URL params are missing
     const productName = urlParams.get('name') || '{{ order.product_name|default:'Premium Rice' }}';
-    const productImage = urlParams.get('image') || '{% static "images/placeholder.jpg" %}';
+    const productImage = urlParams.get('image') || '{{ pending_image }}' || '{% static "images/placeholder.jpg" %}';
     const productPrice = urlParams.get('price') || '{{ order.price|default:'60.00' }}';
     const productCategory = urlParams.get('category') || '{{ order.product_category|default:'Grains' }}';
     
@@ -864,6 +872,9 @@
     document.getElementById('orderId').value = orderId;
     document.getElementById('productName').value = decodeURIComponent(productName);
     document.getElementById('productQuantity').value = quantity;
+    document.getElementById('unitPrice').value = unitPrice.toFixed(2);
+    document.getElementById('subtotalAmount').value = subtotal.toFixed(2);
+    document.getElementById('deliveryFee').value = deliveryCharge.toFixed(2);
     document.getElementById('totalAmount').value = total.toFixed(2);
 
     // Rest of your payment method selection code remains the same...
@@ -992,6 +1003,17 @@
 
                 // Show success overlay
                 document.getElementById('orderIdDisplay').textContent = orderData.orderId;
+
+                const emailStatusEl = document.getElementById('emailStatus');
+                emailStatusEl.style.display = 'block';
+                if (data.email_sent) {
+                    emailStatusEl.style.color = '#28a745';
+                    emailStatusEl.innerHTML = '<i class="fas fa-envelope-open-text"></i> A confirmation email has been sent to your inbox.';
+                } else {
+                    emailStatusEl.style.color = '#6c757d';
+                    emailStatusEl.innerHTML = '<i class="fas fa-info-circle"></i> Order confirmed! Email notification could not be sent.';
+                }
+
                 document.getElementById('successOverlay').classList.add('show');
             } else {
                 alert('Payment failed: ' + (data.message || 'Unknown error'));

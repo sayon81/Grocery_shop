@@ -806,8 +806,8 @@
                     {% for item in order_items %}
                     <div class="order-item">
                         <div class="item-image">
-                            {% if item.food and item.food.image %}
-                                <img src="{{ item.food.image.url }}" alt="{{ item.food.name }}">
+                            {% if item.item and item.item.image %}
+                                <img src="{{ item.item.image.url }}" alt="{{ item.item.name }}">
                             {% elif item.product_image %}
                                 <img src="{{ item.product_image }}" alt="{{ item.product_name }}">
                             {% else %}
@@ -816,16 +816,16 @@
                         </div>
                         <div class="item-details">
                             <h4>
-                                {% if item.food %}
-                                    {{ item.food.name }}
+                                {% if item.item %}
+                                    {{ item.item.name }}
                                 {% else %}
                                     {{ item.product_name|default:"Unknown Product" }}
                                 {% endif %}
                             </h4>
                             <div class="item-meta">
                                 <span><i class="fas fa-tag"></i> 
-                                    {% if item.food and item.food.category %}
-                                        {{ item.food.category.name }}
+                                    {% if item.item and item.item.category %}
+                                        {{ item.item.category.name }}
                                     {% elif item.product_category %}
                                         {{ item.product_category }}
                                     {% else %}
@@ -833,10 +833,10 @@
                                     {% endif %}
                                 </span>
                                 <span><i class="fas fa-weight"></i> 
-                                    {% if item.food and item.food.weight %}
-                                        {{ item.food.weight }} {{ item.food.weight_unit }}
-                                    {% elif item.food %}
-                                        {{ item.food.get_unit_display }}
+                                    {% if item.item and item.item.weight %}
+                                        {{ item.item.weight }} {{ item.item.weight_unit }}
+                                    {% elif item.item %}
+                                        {{ item.item.get_unit_display }}
                                     {% else %}
                                         kg
                                     {% endif %}

@@ -311,6 +311,51 @@
     font-size: 0.95rem;
 }
 
+/* Alert Messages */
+.login-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: shakeIn 0.5s ease;
+}
+
+.login-alert i {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.login-alert-error {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    color: #c0392b;
+    border: 1px solid #f5c6cb;
+}
+
+.login-alert-success {
+    background: linear-gradient(135deg, #f0fff4 0%, #e6ffed 100%);
+    color: #1e7e34;
+    border: 1px solid #b7dfb9;
+}
+
+.login-alert-info {
+    background: linear-gradient(135deg, #f0f8ff 0%, #e8f4fd 100%);
+    color: #0c5460;
+    border: 1px solid #b8daff;
+}
+
+@keyframes shakeIn {
+    0% { opacity: 0; transform: translateX(-10px); }
+    20% { transform: translateX(8px); }
+    40% { transform: translateX(-6px); }
+    60% { transform: translateX(4px); }
+    80% { transform: translateX(-2px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
 /* Form Styles */
 .login-form {
     animation: fadeIn 0.8s ease 0.4s both;

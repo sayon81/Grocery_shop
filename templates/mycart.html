@@ -1055,9 +1055,15 @@
                         <span class="total-amount">৳{{ total|floatformat:2 }}</span>
                     </div>
                     
+                    {% if user.is_authenticated %}
                     <a href="{% url 'home:payment_from_cart' %}" class="btn-checkout">
                         <i class="fas fa-lock"></i> Proceed to Payment
                     </a>
+                    {% else %}
+                    <a href="{% url 'home:login' %}?next={% url 'home:payment_from_cart' %}" class="btn-checkout">
+                        <i class="fas fa-sign-in-alt"></i> Login to Checkout
+                    </a>
+                    {% endif %}
                     
                     <a href="{% url 'home:items' %}" class="btn-continue">
                         <i class="fas fa-arrow-left"></i> Continue Shopping

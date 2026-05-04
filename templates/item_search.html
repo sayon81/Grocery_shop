@@ -108,8 +108,18 @@
         flex: 1;
     }
 
+    .result-card-actions {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+        margin-top: auto;
+    }
+
     .result-card-btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
         padding: 10px 24px;
         font-size: 0.88rem;
         font-weight: 600;
@@ -128,6 +138,49 @@
         box-shadow: 0 6px 18px rgba(40,167,69,0.3);
         color: white;
         transform: scale(1.04);
+    }
+
+    .add-to-cart-form {
+        flex: 1;
+        display: flex;
+        margin: 0;
+    }
+
+    .btn-add-cart {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 14px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #28a745;
+        background: white;
+        border: 2px solid #28a745;
+        border-radius: 24px;
+        cursor: pointer;
+        font-family: inherit;
+        white-space: nowrap;
+        transition: all 0.25s ease;
+    }
+
+    .btn-add-cart:hover {
+        background: #28a745;
+        color: white;
+        box-shadow: 0 6px 18px rgba(40,167,69,0.25);
+        transform: scale(1.04);
+    }
+
+    .btn-add-cart.added {
+        background: #28a745;
+        color: white;
+        border-color: #28a745;
+    }
+
+    .btn-add-cart:disabled {
+        cursor: not-allowed;
+        opacity: 0.8;
     }
 
     /* Empty state */
@@ -233,6 +286,7 @@
         .results-grid { grid-template-columns: 1fr; }
         .search-hero h2 { font-size: 1.5rem; }
         .empty-actions { flex-direction: column; align-items: center; }
+        .result-card-actions { flex-direction: column; }
     }
 </style>
 {% endblock %}
@@ -265,9 +319,17 @@
                         <h4>{{ item.name }}</h4>
                         <p class="result-card-price">৳{{ item.price }}</p>
                         <p class="result-card-desc">{{ item.description|truncatechars:100 }}</p>
-                        <a href="{% url 'home:order' %}?name={{ item.name|urlencode }}&image={% if item.image %}{{ item.image.url|urlencode }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}&price={{ item.price }}&category={{ item.category.name|urlencode }}&description={{ item.description|urlencode }}"
-                           class="result-card-btn"
-                           onclick="event.stopPropagation()">Order Now</a>
+                        <div class="result-card-actions" onclick="event.stopPropagation()">
+                            <a href="{% url 'home:order' %}?name={{ item.name|urlencode }}&image={% if item.image %}{{ item.image.url|urlencode }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}&price={{ item.price }}&category={{ item.category.name|urlencode }}&description={{ item.description|urlencode }}"
+                               class="result-card-btn">Order Now</a>
+                            <form method="POST" action="{% url 'home:add_to_cart' item.id %}" class="add-to-cart-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn-add-cart">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
@@ -316,6 +378,52 @@
                     function(match) { return '<mark style="background:#fff3cd;color:#856404;padding:1px 3px;border-radius:3px;">' + match + '</mark>'; }
                 );
             }
+        });
+    });
+
+    document.querySelectorAll('.add-to-cart-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var btn = this.querySelector('.btn-add-cart');
+            var originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            btn.disabled = true;
+
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: {
+                    'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    btn.classList.add('added');
+
+                    var cartLink = document.querySelector('a[href*="cart"]');
+                    if (cartLink && data.cart_count !== undefined) {
+                        cartLink.textContent = 'Cart (' + data.cart_count + ')';
+                    }
+
+                    setTimeout(function() {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('added');
+                        btn.disabled = false;
+                    }, 2000);
+                } else {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                    alert(data.error || 'Failed to add item to cart');
+                }
+            })
+            .catch(function() {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                alert('Failed to add item to cart');
+            });
         });
     });
 </script>
